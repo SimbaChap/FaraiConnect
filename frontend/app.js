@@ -7,8 +7,12 @@ const categoryButtons = document.querySelectorAll(".category-pill");
 const navItems = document.querySelectorAll("[data-home-view]");
 const subfilterStrip = document.querySelector(".subfilter-strip");
 const listingFeed = document.querySelector(".listing-feed");
+const quickGrid = document.querySelector(".quick-grid");
+const quickInsightPanel = document.querySelector(".quick-insight-panel");
 let activeHomeView = "home";
 let activeCategory = "houses";
+let activeQuickCard = "";
+let activeDemandPlace = "";
 const profilePhotos = [
   "assets/profile-1.jpg",
   "assets/profile-2.jpg",
@@ -17,8 +21,8 @@ const profilePhotos = [
   "assets/profile-5.jpg",
 ];
 const greatZimbabwePhotos = [
-  "assets/great-zimbabwe-1.jpg",
   "assets/great-zimbabwe-2.webp",
+  "assets/great-zimbabwe-1.jpg",
   "assets/great-zimbabwe-3.jpg",
   "assets/great-zimbabwe-4.jpg",
   "assets/great-zimbabwe-5.jpg",
@@ -547,11 +551,463 @@ const resortListings = [
       ...victoriaFallsPhotos,
     ],
   },
+  makeResortListing({
+    id: "mazowe-dam-day-resort",
+    title: "Mazowe Dam day resort",
+    type: "Dam day resort",
+    price: "$25/day",
+    place: "Mazowe",
+    description: "Quiet dam-side day visit with braai space, picnic views, canoeing, and relaxed group outing energy.",
+    activities: ["Braai", "Canoeing", "Picnic spaces", "Dam views"],
+    images: [
+      "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+    ],
+    plannedCount: 18,
+    hangoutCount: 7,
+    views: 3720,
+  }),
+  makeResortListing({
+    id: "lake-chivero-picnic-side",
+    title: "Lake Chivero picnic side",
+    type: "Lake picnic resort",
+    price: "$20/day",
+    place: "Harare West",
+    description: "Easy weekend picnic stop near Harare with lakeside photos, braai corners, and family-friendly open spaces.",
+    activities: ["Braai", "Canoeing", "Fishing", "Family picnic"],
+    images: [
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+    ],
+    plannedCount: 13,
+    hangoutCount: 5,
+    views: 2801,
+  }),
+  makeResortListing({
+    id: "domboshava-sunset-rocks",
+    title: "Domboshava sunset rocks",
+    type: "Rock outing",
+    price: "$10/day",
+    place: "Domboshava",
+    description: "Short scenic climb, sunset photos, heritage rock views, and a simple outdoor day trip from Harare.",
+    activities: ["Hiking", "Heritage walks", "Photography", "Sunset viewing"],
+    images: [
+      "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80",
+    ],
+    plannedCount: 9,
+    hangoutCount: 4,
+    views: 2210,
+  }),
+  makeResortListing({
+    id: "lion-and-cheetah-park",
+    title: "Lion and Cheetah Park",
+    type: "Wildlife park",
+    price: "$30/day",
+    place: "Harare",
+    description: "Popular wildlife outing for lion viewing, family day trips, and people planning easy group visits near Harare.",
+    activities: ["Lion interaction", "Lion viewing", "Game drive", "Family friendly"],
+    images: [
+      "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1534177616072-ef7dc120449d?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1200&q=80",
+    ],
+    plannedCount: 15,
+    hangoutCount: 6,
+    views: 3354,
+  }),
+  makeResortListing({
+    id: "imire-rhino-and-wildlife",
+    title: "Imire Rhino and Wildlife",
+    type: "Safari reserve",
+    price: "$65/day",
+    place: "Marondera",
+    description: "Wildlife and conservation-focused trip with rhino viewing, guided drives, and small-group day experiences.",
+    activities: ["Game drive", "Elephant viewing", "Guided tours", "Safari"],
+    images: [
+      "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1508672019048-805c876b67e2?auto=format&fit=crop&w=1200&q=80",
+    ],
+    plannedCount: 12,
+    hangoutCount: 5,
+    views: 2988,
+  }),
+  makeResortListing({
+    id: "chengeta-safari-lodge",
+    title: "Chengeta safari lodge",
+    type: "Safari lodge",
+    price: "$95/night",
+    place: "Selous",
+    description: "Lodge stay with safari activities, quiet weekend getaway feel, and good space for family or small group trips.",
+    activities: ["Game drive", "Stay provided", "Safari", "Braai"],
+    images: [
+      "https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=80",
+    ],
+    plannedCount: 7,
+    hangoutCount: 3,
+    views: 1805,
+  }),
+  makeResortListing({
+    id: "zambezi-river-cruise",
+    title: "Zambezi river cruise",
+    type: "Boat cruise",
+    price: "$50/day",
+    place: "Victoria Falls",
+    description: "Sunset cruise energy with water views, group photos, and a strong social trip-planning pull.",
+    activities: ["Boat cruise", "Waterfalls", "Guided tours", "Weekend getaway"],
+    images: [
+      victoriaFallsPhotos[1],
+      victoriaFallsPhotos[2],
+      victoriaFallsPhotos[4],
+    ],
+    plannedCount: 12,
+    hangoutCount: 6,
+    views: 3050,
+  }),
+  makeResortListing({
+    id: "falls-rainforest-walk",
+    title: "Falls rainforest walk",
+    type: "Waterfall walk",
+    price: "$35/day",
+    place: "Victoria Falls",
+    description: "Mist, rainbow photos, waterfall viewpoints, and guided walking routes around the Falls.",
+    activities: ["Waterfalls", "Guided tours", "Hiking", "Photography"],
+    images: [
+      victoriaFallsPhotos[3],
+      victoriaFallsPhotos[0],
+      victoriaFallsPhotos[4],
+    ],
+    plannedCount: 10,
+    hangoutCount: 4,
+    views: 2645,
+  }),
+  makeResortListing({
+    id: "binga-hot-springs-stop",
+    title: "Binga hot springs stop",
+    type: "Hot springs",
+    price: "$35/day",
+    place: "Binga",
+    description: "Warm springs stop with lake-route travel energy, quiet views, and small group adventure potential.",
+    activities: ["Private", "Day trips", "Water viewing", "Weekend getaway"],
+    images: [
+      "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+    ],
+    plannedCount: 8,
+    hangoutCount: 3,
+    views: 1942,
+  }),
+  makeResortListing({
+    id: "matusadona-lake-camp",
+    title: "Matusadona lake camp",
+    type: "Lake camp",
+    price: "$120/night",
+    place: "Kariba",
+    description: "Remote lake-camp feel with wildlife views, boat trips, and a stronger stay-over adventure angle.",
+    activities: ["Safari", "Boat cruise", "Stay provided", "Private"],
+    images: [
+      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=1200&q=80",
+    ],
+    plannedCount: 6,
+    hangoutCount: 2,
+    views: 1548,
+  }),
+  makeResortListing({
+    id: "kyle-dam-heritage-lodge",
+    title: "Kyle dam heritage lodge",
+    type: "Heritage lodge",
+    price: "$70/night",
+    place: "Masvingo",
+    description: "Heritage lodge option near Great Zimbabwe and Kyle dam, good for families wanting history plus scenery.",
+    activities: ["Heritage walks", "Guided tours", "Stay provided", "Family friendly"],
+    images: [
+      greatZimbabwePhotos[3],
+      greatZimbabwePhotos[0],
+      greatZimbabwePhotos[4],
+    ],
+    plannedCount: 6,
+    hangoutCount: 3,
+    views: 1774,
+  }),
+  makeResortListing({
+    id: "ancient-city-guided-walk",
+    title: "Ancient city guided walk",
+    type: "Heritage walk",
+    price: "$18/day",
+    place: "Great Zimbabwe",
+    description: "Guided walk through the stone city, photo stops, stories, and cultural memory sharing.",
+    activities: ["Heritage walks", "Guided tours", "Day trips", "Photography"],
+    images: [
+      greatZimbabwePhotos[2],
+      greatZimbabwePhotos[1],
+      greatZimbabwePhotos[0],
+    ],
+    plannedCount: 5,
+    hangoutCount: 2,
+    views: 1395,
+  }),
 ];
+
+function makeResortListing({
+  id,
+  title,
+  type,
+  price,
+  place,
+  description,
+  activities,
+  images,
+  plannedCount,
+  hangoutCount,
+  views,
+}) {
+  return {
+    id,
+    category: "resort",
+    type,
+    title,
+    price,
+    poster: `${place} Travel Circle`,
+    initials: place
+      .split(" ")
+      .map((word) => word[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase(),
+    posterPhoto: profilePhotos[plannedCount % profilePhotos.length],
+    agentRating: 4,
+    agentLikes: 90 + plannedCount * 7,
+    agentLiked: false,
+    agentFollowed: false,
+    agentReports: [],
+    agentComments: [
+      { tone: "positive", author: "Rumbi", text: "Useful place details and quick replies." },
+      { tone: "positive", author: "Tapiwa", text: "Good for planning with friends." },
+      { tone: "negative", author: "Maita", text: "Would like clearer transport details." },
+    ],
+    description,
+    likes: 180 + plannedCount * 19,
+    liked: false,
+    comments: 18 + hangoutCount * 4,
+    propertyVerified: plannedCount % 2 === 0,
+    propertyVerifiedAt: plannedCount % 2 === 0 ? "Verified this week" : "",
+    posterVerified: true,
+    allowsWhatsapp: plannedCount % 3 !== 0,
+    whatsappNumber: "263774445566",
+    rooms: 8 + hangoutCount,
+    bedrooms: 4 + hangoutCount,
+    bathrooms: 4 + hangoutCount,
+    dayTrip: !price.includes("night"),
+    accommodationProvided: price.includes("night"),
+    activities,
+    visitors: [`Rumbi visited ${place}`, `Tapiwa saved ${title}`, `Maita shared memories here`],
+    plannedCount,
+    hangoutCount,
+    userPlanned: false,
+    userHangout: false,
+    planTiming: "anytime",
+    planDate: "",
+    openToGroups: false,
+    openToPartner: false,
+    plannedVisitors: [`${plannedCount} people are planning this place`, "Some are open to group trips", "Friends are comparing dates"],
+    planningPeople: [
+      {
+        name: "Rumbi",
+        type: "person",
+        status: "planning",
+        gender: "female",
+        availability: "anytime",
+        openFor: "partner",
+        note: `Wants to visit ${place} and take photos.`,
+        visitWhen: "Planning to visit soon",
+        photos: [profilePhotos[1]],
+      },
+      {
+        name: "Travel friends",
+        type: "group",
+        status: "hangout",
+        gender: "mixed",
+        availability: "weekend",
+        openFor: "group",
+        note: "Small group checking dates and transport.",
+        visitWhen: "Open to a weekend trip",
+        photos: [profilePhotos[0], profilePhotos[2], profilePhotos[4]],
+      },
+      {
+        name: "Tapiwa",
+        type: "person",
+        status: "hangout",
+        gender: "male",
+        availability: "soon",
+        openFor: "partner",
+        note: "Open to travelling with someone interested in the same place.",
+        visitWhen: "Can plan dates together",
+        photos: [profilePhotos[3]],
+      },
+    ],
+    postedAt: "Posted this week",
+    views,
+    historyNotes: [`${place} interest is rising`, "Visitor memories detected", "Demo listing created for FaraiConnect prototype"],
+    commentsList: [
+      { tone: "positive", author: "Rudo", text: "This looks like a good outing with friends." },
+      { tone: "positive", author: "Kuda", text: "The photos make it easier to decide." },
+      { tone: "negative", author: "Anesu", text: "Please add transport and opening time details." },
+    ],
+    images,
+  };
+}
 
 const listingsByCategory = {
   houses: propertyListings,
   resorts: resortListings,
+};
+
+const resortDemandTimeline = [
+  {
+    date: "30 May",
+    title: "Mazowe Dam day resort",
+    place: "Mazowe Dam",
+    count: 18,
+    image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=600&q=80",
+    filters: ["All resorts", "Weekend getaway", "Private", "Family friendly", "Day trips", "Braai", "Canoeing", "Near me"],
+    places: [
+      { title: "Mazowe Dam day resort", place: "Mazowe", count: 18, image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=600&q=80" },
+      { title: "Lake Chivero picnic side", place: "Harare West", count: 13, image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80" },
+      { title: "Domboshava sunset rocks", place: "Domboshava", count: 9, image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=600&q=80" },
+    ],
+  },
+  {
+    date: "7 Jun",
+    title: "Lion and Cheetah Park",
+    place: "Harare",
+    count: 15,
+    image: "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=600&q=80",
+    filters: ["All resorts", "Safari", "Game drive", "Crowd pullers", "Family friendly", "Lion interaction", "Lion viewing"],
+    places: [
+      { title: "Lion and Cheetah Park", place: "Harare", count: 15, image: "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=600&q=80" },
+      { title: "Imire Rhino and Wildlife", place: "Marondera", count: 12, image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=600&q=80" },
+      { title: "Chengeta safari lodge", place: "Selous", count: 7, image: "https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=600&q=80" },
+    ],
+  },
+  {
+    date: "14 Jun",
+    title: "Victoria Falls boutique stay",
+    place: "Victoria Falls",
+    count: 14,
+    image: victoriaFallsPhotos[0],
+    filters: ["All resorts", "Weekend getaway", "Restaurant", "Crowd pullers", "Stay provided", "Guided tours", "Waterfalls", "Boat cruise"],
+    places: [
+      { title: "Victoria Falls boutique stay", place: "Victoria Falls", count: 14, image: victoriaFallsPhotos[0] },
+      { title: "Zambezi river cruise", place: "Victoria Falls", count: 12, image: victoriaFallsPhotos[1] },
+      { title: "Falls rainforest walk", place: "Victoria Falls", count: 10, image: victoriaFallsPhotos[3] },
+    ],
+  },
+  {
+    date: "21 Jun",
+    title: "Kariba lakeside family resort",
+    place: "Kariba",
+    count: 11,
+    image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80",
+    filters: ["All resorts", "Weekend getaway", "Private", "Family friendly", "Stay provided", "Boat cruise", "Braai", "Canoeing"],
+    places: [
+      { title: "Kariba lakeside family resort", place: "Kariba", count: 11, image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80" },
+      { title: "Binga hot springs stop", place: "Binga", count: 8, image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80" },
+      { title: "Matusadona lake camp", place: "Kariba", count: 6, image: "https://images.unsplash.com/photo-1482938289607-e9573fc25ebb?auto=format&fit=crop&w=600&q=80" },
+    ],
+  },
+  {
+    date: "28 Jun",
+    title: "Great Zimbabwe heritage resort",
+    place: "Masvingo",
+    count: 8,
+    image: greatZimbabwePhotos[0],
+    filters: ["All resorts", "Heritage walks", "Guided tours", "Weekend getaway", "Crowd pullers", "Day trips"],
+    places: [
+      { title: "Great Zimbabwe heritage resort", place: "Masvingo", count: 8, image: greatZimbabwePhotos[0] },
+      { title: "Kyle dam heritage lodge", place: "Masvingo", count: 6, image: greatZimbabwePhotos[3] },
+      { title: "Ancient city guided walk", place: "Great Zimbabwe", count: 5, image: greatZimbabwePhotos[2] },
+    ],
+  },
+];
+
+const organisedTrips = [
+  {
+    title: "Mazowe dam braai link-up",
+    where: "Mazowe Dam",
+    organiser: "Rumbi Trips",
+    cost: "$18 pp",
+    when: "30 May",
+    going: 32,
+    image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=600&q=80",
+    target: "mazowe-dam-day-resort",
+  },
+  {
+    title: "Domboshava sunrise hike",
+    where: "Domboshava rocks",
+    organiser: "Harare Hikers",
+    cost: "$8 pp",
+    when: "1 Jun",
+    going: 27,
+    image: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=600&q=80",
+    target: "domboshava-sunset-rocks",
+  },
+  {
+    title: "Lion park family day",
+    where: "Lion and Cheetah Park",
+    organiser: "Moyo Family Circle",
+    cost: "$25 pp",
+    when: "7 Jun",
+    going: 21,
+    image: "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=600&q=80",
+    target: "lion-and-cheetah-park",
+  },
+  {
+    title: "Zambezi sunset cruise group",
+    where: "Victoria Falls",
+    organiser: "Falls Weekend Crew",
+    cost: "$50 pp",
+    when: "14 Jun",
+    going: 18,
+    image: victoriaFallsPhotos[1],
+    target: "zambezi-river-cruise",
+  },
+  {
+    title: "Great Zimbabwe heritage walk",
+    where: "Great Zimbabwe",
+    organiser: "Masvingo Culture Club",
+    cost: "$12 pp",
+    when: "28 Jun",
+    going: 12,
+    image: greatZimbabwePhotos[0],
+    target: "ancient-city-guided-walk",
+  },
+];
+
+const demandReelTargets = {
+  "Mazowe Dam day resort": "mazowe-dam-day-resort",
+  "Lake Chivero picnic side": "lake-chivero-picnic-side",
+  "Domboshava sunset rocks": "domboshava-sunset-rocks",
+  "Lion and Cheetah Park": "lion-and-cheetah-park",
+  "Imire Rhino and Wildlife": "imire-rhino-and-wildlife",
+  "Chengeta safari lodge": "chengeta-safari-lodge",
+  "Victoria Falls boutique stay": "victoria-falls-boutique-stay",
+  "Zambezi river cruise": "zambezi-river-cruise",
+  "Falls rainforest walk": "falls-rainforest-walk",
+  "Kariba lakeside family resort": "kariba-lakeside-resort",
+  "Binga hot springs stop": "binga-hot-springs-stop",
+  "Matusadona lake camp": "matusadona-lake-camp",
+  "Great Zimbabwe heritage resort": "great-zimbabwe-heritage-resort",
+  "Kyle dam heritage lodge": "kyle-dam-heritage-lodge",
+  "Ancient city guided walk": "ancient-city-guided-walk",
 };
 
 const categoryFilters = {
@@ -567,7 +1023,7 @@ const categoryFilters = {
 const resortFilterGroups = [
   {
     label: "Type of resort",
-    filters: ["Weekend getaway", "Private", "Safari", "Game drive", "Restaurant", "Crowd pullers", "Family friendly", "Day trips", "Stay provided", "Near me"],
+    filters: ["All resorts", "Weekend getaway", "Private", "Safari", "Game drive", "Restaurant", "Crowd pullers", "Family friendly", "Day trips", "Stay provided", "Near me"],
   },
   {
     label: "Activities offered",
@@ -585,11 +1041,11 @@ function renderSubfilters(category) {
   if (category === "resorts") {
     subfilterStrip.innerHTML = resortFilterGroups
       .map(
-        (group) => `
+        (group, groupIndex) => `
           <div class="subfilter-group">
             <strong>${group.label}</strong>
             <div class="subfilter-row">
-              ${group.filters.map((filter) => `<button class="subfilter-pill" type="button" data-resort-filter>${filter}</button>`).join("")}
+              ${group.filters.map((filter, filterIndex) => `<button class="subfilter-pill${groupIndex === 0 && filterIndex === 0 ? " active" : ""}" type="button" data-resort-filter>${filter}</button>`).join("")}
             </div>
           </div>`
       )
@@ -598,22 +1054,238 @@ function renderSubfilters(category) {
   }
 
   const filters = categoryFilters[category] || [];
-  subfilterStrip.innerHTML = filters
-    .map((filter, index) => `<button class="subfilter-pill${index === 0 ? " active" : ""}" type="button">${filter}</button>`)
-    .join("");
+  subfilterStrip.innerHTML = `
+    <div class="subfilter-row">
+      ${filters
+        .map((filter, index) => `<button class="subfilter-pill${index === 0 ? " active" : ""}" type="button">${filter}</button>`)
+        .join("")}
+    </div>`;
+}
+
+function renderQuickInsightPanel() {
+  if (!quickInsightPanel || !activeQuickCard) return;
+  if (activeQuickCard === "organised") {
+    quickInsightPanel.hidden = false;
+    quickInsightPanel.innerHTML = renderOrganisedTripsPanel();
+    return;
+  }
+  if (activeQuickCard !== "to-go") return;
+  const isResorts = activeCategory === "resorts";
+  quickInsightPanel.hidden = false;
+  quickInsightPanel.innerHTML = isResorts ? renderResortDemandPanel() : renderPropertyDemandPanel();
+}
+
+function renderOrganisedTripsPanel() {
+  const sortedTrips = [...organisedTrips].sort((a, b) => b.going - a.going);
+  const maxGoing = Math.max(...sortedTrips.map((trip) => trip.going));
+  return `
+    <div class="quick-insight-head">
+      <div>
+        <strong>Organised trips</strong>
+        <span>Popular trips people created for braai, hiking, cruising, and heritage walks.</span>
+      </div>
+      <button class="quick-insight-close" type="button" data-quick-close aria-label="Close organised trips">x</button>
+    </div>
+    <div class="trip-list" aria-label="Organised trips by popularity">
+      ${sortedTrips
+        .map(
+          (trip) => `
+            <article class="trip-item" data-demand-target="${trip.target}" role="button" tabindex="0" aria-label="Open trip reel for ${trip.title}">
+              <img src="${trip.image}" alt="" />
+              <div>
+                <strong>${trip.title}</strong>
+                <span>${trip.where} - ${trip.when} - ${trip.cost}</span>
+                <small>By ${trip.organiser}</small>
+              </div>
+              <div class="trip-popularity">
+                <b>${trip.going}</b>
+                <span style="height: ${(trip.going / maxGoing) * 100}%"></span>
+              </div>
+            </article>`
+        )
+        .join("")}
+    </div>`;
+}
+
+function getSelectedResortFilters() {
+  return Array.from(subfilterStrip.querySelectorAll(".subfilter-pill.active"))
+    .map((button) => button.textContent.trim())
+    .filter((filter) => filter !== "All resorts");
+}
+
+function getSelectedResortFilterGroups() {
+  const selected = getSelectedResortFilters();
+  const typeFilters = new Set(resortFilterGroups[0].filters);
+  const activityFilters = new Set(resortFilterGroups[1].filters);
+  return {
+    type: selected.filter((filter) => typeFilters.has(filter)),
+    activities: selected.filter((filter) => activityFilters.has(filter)),
+  };
+}
+
+function normalizeFilterText(text) {
+  return String(text).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function resortListingMatchesFilter(listing, filter) {
+  const normalizedFilter = normalizeFilterText(filter);
+  const listingText = normalizeFilterText(
+    [
+      listing.type,
+      listing.title,
+      listing.description,
+      ...(listing.activities || []),
+      listing.dayTrip ? "day trips day trip" : "",
+      listing.accommodationProvided ? "stay provided accommodation night lodge" : "",
+    ].join(" ")
+  );
+
+  if (normalizedFilter === "near me") return true;
+  if (normalizedFilter === "day trips") return Boolean(listing.dayTrip);
+  if (normalizedFilter === "stay provided") return Boolean(listing.accommodationProvided);
+  if (normalizedFilter === "crowd pullers") return listing.plannedCount >= 10 || listing.views >= 3000;
+  if (normalizedFilter === "family friendly") return listingText.includes("family");
+  if (normalizedFilter === "weekend getaway") return listingText.includes("weekend") || listing.accommodationProvided;
+  if (normalizedFilter === "game drive") return listingText.includes("game drive") || listingText.includes("safari");
+  if (normalizedFilter === "guided tours") return listingText.includes("guided") || listingText.includes("tour");
+  if (normalizedFilter === "lion viewing") return listingText.includes("lion");
+  if (normalizedFilter === "lion interaction") return listingText.includes("lion");
+  if (normalizedFilter === "elephant viewing") return listingText.includes("elephant") || listingText.includes("wildlife");
+  if (normalizedFilter === "waterfalls") return listingText.includes("waterfall") || listingText.includes("falls");
+  if (normalizedFilter === "heritage walks") return listingText.includes("heritage") || listingText.includes("walk");
+
+  return listingText.includes(normalizedFilter);
+}
+
+function filterResortListings(listings) {
+  const selected = getSelectedResortFilterGroups();
+  if (selected.type.length === 0 && selected.activities.length === 0) return listings;
+
+  return listings.filter((listing) => {
+    const matchesType = selected.type.length === 0 || selected.type.some((filter) => resortListingMatchesFilter(listing, filter));
+    const matchesActivity =
+      selected.activities.length === 0 || selected.activities.some((filter) => resortListingMatchesFilter(listing, filter));
+    return matchesType && matchesActivity;
+  });
+}
+
+function filterResortDemandItems() {
+  const selectedFilters = getSelectedResortFilters();
+  if (selectedFilters.length === 0) {
+    return {
+      selectedFilters,
+      items: resortDemandTimeline,
+    };
+  }
+
+  const items = resortDemandTimeline
+    .map((item) => ({
+      ...item,
+      matchCount: selectedFilters.filter((filter) => item.filters.includes(filter)).length,
+    }))
+    .filter((item) => item.matchCount > 0)
+    .sort((a, b) => b.matchCount - a.matchCount || b.count - a.count);
+
+  return {
+    selectedFilters,
+    items,
+  };
+}
+
+function renderResortDemandPanel() {
+  const { selectedFilters, items } = filterResortDemandItems();
+  const sortedDemand = [...items].sort((a, b) => b.count - a.count);
+  const selected = items.find((item) => item.title === activeDemandPlace) || sortedDemand[0];
+  const filterText = selectedFilters.length ? `Filtered by ${selectedFilters.join(", ")}` : "Tap resort type or activity chips to focus demand.";
+  if (!selected) {
+    return `
+      <div class="quick-insight-head">
+        <div>
+          <strong>To go places</strong>
+          <span>No crowd demand yet for ${selectedFilters.join(", ")}.</span>
+        </div>
+        <button class="quick-insight-close" type="button" data-quick-close aria-label="Close to go places">x</button>
+      </div>`;
+  }
+  const selectedPlaces = selected.places || [selected];
+  const maxPlaceCount = Math.max(...selectedPlaces.map((item) => item.count));
+  return `
+    <div class="quick-insight-head">
+      <div>
+        <strong>To go places</strong>
+        <span>${selected.title} is leading demand around ${selected.date}. ${filterText}</span>
+      </div>
+      <button class="quick-insight-close" type="button" data-quick-close aria-label="Close to go places">x</button>
+    </div>
+    <div class="demand-timeline" aria-label="Resort trip demand over time">
+      ${items
+        .map(
+          (item) => `
+            <button class="${item.title === selected.title ? "active" : ""}" type="button" data-demand-place="${item.title}">
+              <img src="${item.image}" alt="" />
+              <strong>${item.date}</strong>
+              <span>${item.place}</span>
+            </button>`
+        )
+        .join("")}
+    </div>
+    <div class="demand-list" aria-label="Places by crowd interest">
+      ${selectedPlaces
+        .map(
+          (item) => `
+            <article class="demand-item" data-demand-target="${demandReelTargets[item.title] || selected.id || ""}" role="button" tabindex="0" aria-label="Open reel for ${item.title}">
+              <img src="${item.image}" alt="" />
+              <div>
+                <strong>${item.title}</strong>
+                <span>${item.count} people planning to visit${item.place ? ` - ${item.place}` : ""}</span>
+              </div>
+              <div class="demand-meter" aria-label="${item.count} planning"><span style="width: ${(item.count / maxPlaceCount) * 100}%"></span></div>
+            </article>`
+        )
+        .join("")}
+    </div>`;
+}
+
+function renderPropertyDemandPanel() {
+  const sortedProperties = [...propertyListings].sort((a, b) => b.views - a.views).slice(0, 5);
+  const maxViews = Math.max(...sortedProperties.map((listing) => listing.views));
+  return `
+    <div class="quick-insight-head">
+      <div>
+        <strong>Most viewed properties</strong>
+        <span>For houses, this shows which listings people are inspecting most.</span>
+      </div>
+      <button class="quick-insight-close" type="button" data-quick-close aria-label="Close to go places">x</button>
+    </div>
+    <div class="demand-list" aria-label="Properties by views">
+      ${sortedProperties
+        .map(
+          (listing) => `
+            <article class="demand-item" data-demand-target="${listing.id}" role="button" tabindex="0" aria-label="Open reel for ${listing.title}">
+              <img src="${listing.images[0]}" alt="" />
+              <div>
+                <strong>${listing.title}</strong>
+                <span>${listing.views.toLocaleString()} views</span>
+              </div>
+              <div class="demand-meter" aria-label="${listing.views} views"><span style="width: ${(listing.views / maxViews) * 100}%"></span></div>
+            </article>`
+        )
+        .join("")}
+    </div>`;
 }
 
 function renderListings(view = "home") {
-  const categoryListings = listingsByCategory[activeCategory] || propertyListings;
+  const rawCategoryListings = listingsByCategory[activeCategory] || propertyListings;
+  const categoryListings = activeCategory === "resorts" ? filterResortListings(rawCategoryListings) : rawCategoryListings;
   const allListings = Object.values(listingsByCategory).flat();
   const visibleListings = view === "likes" ? allListings.filter((listing) => listing.liked) : categoryListings;
 
   if (visibleListings.length === 0) {
     listingFeed.innerHTML = `
       <div class="empty-liked">
-        ${iconHeart()}
-        <strong>No liked items yet</strong>
-        <span>Tap the heart on any property to save it here.</span>
+        ${activeCategory === "resorts" ? iconActivity() : iconHeart()}
+        <strong>${activeCategory === "resorts" ? "No matching resorts yet" : "No liked items yet"}</strong>
+        <span>${activeCategory === "resorts" ? "Try removing one filter or choose All resorts." : "Tap the heart on any property to save it here."}</span>
       </div>`;
     return;
   }
@@ -724,6 +1396,38 @@ function listingFromCard(card) {
   return Object.values(listingsByCategory)
     .flat()
     .find((listing) => listing.id === listingId);
+}
+
+function findListingById(listingId) {
+  return Object.values(listingsByCategory)
+    .flat()
+    .find((listing) => listing.id === listingId);
+}
+
+function setHomeCategory(category) {
+  activeHomeView = "home";
+  activeCategory = category;
+  navItems.forEach((navItem) => navItem.classList.toggle("active", navItem.dataset.homeView === "home"));
+  categoryButtons.forEach((categoryButton) => categoryButton.classList.toggle("active", categoryButton.dataset.category === category));
+  renderSubfilters(category);
+  renderListings("home");
+}
+
+function openListingReel(listingId) {
+  const listing = findListingById(listingId);
+  if (!listing) return;
+  const targetCategory = listing.category === "resort" ? "resorts" : "houses";
+  if (activeHomeView !== "home" || activeCategory !== targetCategory) {
+    setHomeCategory(targetCategory);
+  }
+
+  requestAnimationFrame(() => {
+    const card = document.querySelector(`[data-listing-id="${listingId}"]`);
+    if (!card) return;
+    card.scrollIntoView({ behavior: "smooth", block: "start" });
+    card.classList.add("reel-focus");
+    window.setTimeout(() => card.classList.remove("reel-focus"), 1400);
+  });
 }
 
 function renderListingSpecs(listing) {
@@ -1376,7 +2080,31 @@ categoryButtons.forEach((button) => {
     button.classList.add("active");
     renderSubfilters(button.dataset.category);
     renderListings("home");
+    renderQuickInsightPanel();
   });
+});
+
+quickGrid?.addEventListener("click", (event) => {
+  const quickCard = event.target.closest("[data-quick-card]");
+  if (!quickCard) return;
+  const cardType = quickCard.dataset.quickCard;
+  if (cardType !== "to-go" && cardType !== "organised") {
+    activeQuickCard = "";
+    quickInsightPanel.hidden = true;
+    quickGrid.querySelectorAll("[data-quick-card]").forEach((card) => card.classList.remove("active"));
+    if (cardType === "likes") renderListings("likes");
+    return;
+  }
+
+  const isAlreadyOpen = activeQuickCard === cardType && !quickInsightPanel.hidden;
+  activeQuickCard = isAlreadyOpen ? "" : cardType;
+  quickGrid.querySelectorAll("[data-quick-card]").forEach((card) => card.classList.toggle("active", card === quickCard && activeQuickCard === cardType));
+  if (!activeQuickCard) {
+    quickInsightPanel.hidden = true;
+    return;
+  }
+  activeDemandPlace = activeDemandPlace || resortDemandTimeline[0].title;
+  renderQuickInsightPanel();
 });
 
 navItems.forEach((button) => {
@@ -1392,7 +2120,27 @@ subfilterStrip.addEventListener("click", (event) => {
   const button = event.target.closest(".subfilter-pill");
   if (!button) return;
   if (activeCategory === "resorts") {
+    const isAllResorts = button.textContent.trim() === "All resorts";
+    const allResortsButton = Array.from(subfilterStrip.querySelectorAll(".subfilter-pill")).find(
+      (filterButton) => filterButton.textContent.trim() === "All resorts"
+    );
+    if (isAllResorts) {
+      subfilterStrip.querySelectorAll(".subfilter-pill").forEach((filterButton) => filterButton.classList.remove("active"));
+      button.classList.add("active");
+      activeDemandPlace = "";
+      renderListings("home");
+      renderQuickInsightPanel();
+      return;
+    }
     button.classList.toggle("active");
+    if (allResortsButton) allResortsButton.classList.remove("active");
+    const hasActiveFilter = Array.from(subfilterStrip.querySelectorAll(".subfilter-pill")).some(
+      (filterButton) => filterButton !== allResortsButton && filterButton.classList.contains("active")
+    );
+    if (!hasActiveFilter && allResortsButton) allResortsButton.classList.add("active");
+    activeDemandPlace = "";
+    renderListings("home");
+    renderQuickInsightPanel();
     return;
   }
   subfilterStrip.querySelectorAll(".subfilter-pill").forEach((filterButton) => filterButton.classList.remove("active"));
@@ -1400,6 +2148,27 @@ subfilterStrip.addEventListener("click", (event) => {
 });
 
 document.addEventListener("click", (event) => {
+  const quickClose = event.target.closest("[data-quick-close]");
+  if (quickClose) {
+    activeQuickCard = "";
+    quickInsightPanel.hidden = true;
+    quickGrid?.querySelectorAll("[data-quick-card]").forEach((card) => card.classList.remove("active"));
+    return;
+  }
+
+  const demandTarget = event.target.closest("[data-demand-target]");
+  if (demandTarget) {
+    openListingReel(demandTarget.dataset.demandTarget);
+    return;
+  }
+
+  const demandPlace = event.target.closest("[data-demand-place]");
+  if (demandPlace) {
+    activeDemandPlace = demandPlace.dataset.demandPlace;
+    renderQuickInsightPanel();
+    return;
+  }
+
   const galleryControl = event.target.closest("[data-gallery-control]");
   if (galleryControl) {
     const card = galleryControl.closest(".property-card");

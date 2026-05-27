@@ -183,20 +183,38 @@
 
         <div class="subfilter-strip" aria-label="Category filters"></div>
 
-        <div class="quick-grid">
-          <article>
-            <span>7</span>
-            <strong>Places I liked</strong>
-          </article>
-          <article>
-            <span>4</span>
+        <div class="quick-grid" aria-label="Quick views">
+          <button class="quick-card" type="button" data-quick-card="organised">
+            <span>
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 2h2v3h6V2h2v3h3v17H4V5h3V2Zm11 8H6v10h12V10Zm-9.5 3.5h7v2h-7v-2Zm0 3h5v2h-5v-2Z" /></svg>
+              12
+            </span>
+            <strong>Organised trips</strong>
+          </button>
+          <button class="quick-card" type="button" data-quick-card="planned">
+            <span>
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 2h2v3h6V2h2v3h3v17H4V5h3V2Zm11 8H6v10h12V10Zm-8 2 2 2 4-4 1.4 1.4-5.4 5.4-3.4-3.4L10 12Z" /></svg>
+              4
+            </span>
             <strong>Planned visits</strong>
-          </article>
-          <article>
-            <span>9</span>
+          </button>
+          <button class="quick-card" type="button" data-quick-card="notifications">
+            <span>
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 22a2.7 2.7 0 0 0 2.6-2H9.4A2.7 2.7 0 0 0 12 22Zm7-6V11a7 7 0 0 0-14 0v5l-2 2v1h18v-1l-2-2Z" /></svg>
+              9
+            </span>
             <strong>Notifications</strong>
-          </article>
+          </button>
+          <button class="quick-card" type="button" data-quick-card="to-go">
+            <span>
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.7A2.7 2.7 0 1 1 12 6.3a2.7 2.7 0 0 1 0 5.4Z" /></svg>
+              18
+            </span>
+            <strong>To go places</strong>
+          </button>
         </div>
+
+        <section class="quick-insight-panel" aria-live="polite" hidden></section>
 
         <section class="listing-feed" aria-label="House listings"></section>
       </section>
