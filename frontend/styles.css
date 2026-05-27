@@ -1611,6 +1611,70 @@ select:focus {
   color: #fff;
 }
 
+@media (max-width: 699px) {
+  html {
+    scroll-snap-type: y mandatory;
+  }
+
+  .home-screen {
+    padding-bottom: 0;
+  }
+
+  .home-content {
+    margin-top: 1rem;
+  }
+
+  .listing-feed {
+    gap: 0;
+    margin-top: 0.4rem;
+    padding: 0;
+  }
+
+  .property-card {
+    min-height: 100vh;
+    min-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  .property-gallery,
+  .property-photo {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .image-summary {
+    right: 74px;
+    bottom: 150px;
+    left: 14px;
+  }
+
+  .property-specs {
+    right: 74px;
+    bottom: 88px;
+    left: 14px;
+  }
+
+  .image-actions {
+    bottom: 88px;
+  }
+
+  .comments-overlay,
+  .verification-overlay,
+  .resort-overlay,
+  .history-overlay,
+  .agent-menu {
+    bottom: 150px;
+  }
+
+  .resort-overlay {
+    bottom: 150px;
+  }
+}
+
 @media (min-width: 700px) {
   .home-screen {
     padding: 2rem 2rem 2rem 12rem;
