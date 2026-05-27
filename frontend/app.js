@@ -286,6 +286,45 @@ const resortListings = [
     openToGroups: false,
     openToPartner: false,
     plannedVisitors: ["Rumbi wants to go in June", "Tapiwa is planning a family weekend", "Maita is open to a winter trip"],
+    planningPeople: [
+      {
+        name: "Rumbi",
+        type: "person",
+        status: "planning",
+        gender: "female",
+        availability: "june",
+        openFor: "partner",
+        note: "Wants to go in June for hiking and photos.",
+        visitWhen: "Planning to visit in June",
+        photos: ["https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"],
+      },
+      {
+        name: "Tapiwa family group",
+        type: "group",
+        status: "hangout",
+        gender: "mixed",
+        availability: "weekend",
+        openFor: "group",
+        note: "Planning a family weekend and open to another small group.",
+        visitWhen: "Planning a family weekend",
+        photos: [
+          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+          "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=200&q=80",
+          "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80",
+        ],
+      },
+      {
+        name: "Maita",
+        type: "person",
+        status: "hangout",
+        gender: "female",
+        availability: "winter",
+        openFor: "partner",
+        note: "Open to a winter trip partner.",
+        visitWhen: "Planning a winter trip",
+        photos: ["https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80"],
+      },
+    ],
     postedAt: "Posted 1 day ago",
     views: 3480,
     historyNotes: ["Booking contact verified", "Location checked on map", "No duplicate resort post found"],
@@ -344,6 +383,44 @@ const resortListings = [
     openToGroups: false,
     openToPartner: false,
     plannedVisitors: ["Farai wants a weekend trip", "Vimbai is open to group travel", "Kuda wants to join a boat cruise"],
+    planningPeople: [
+      {
+        name: "Farai",
+        type: "person",
+        status: "planning",
+        gender: "male",
+        availability: "weekend",
+        openFor: "partner",
+        note: "Wants a weekend lake trip.",
+        visitWhen: "Planning a weekend visit",
+        photos: ["https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=200&q=80"],
+      },
+      {
+        name: "Vimbai group",
+        type: "group",
+        status: "hangout",
+        gender: "mixed",
+        availability: "anytime",
+        openFor: "group",
+        note: "Open to group travel and boat activities.",
+        visitWhen: "Planning around school holidays",
+        photos: [
+          "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=200&q=80",
+          "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80",
+        ],
+      },
+      {
+        name: "Kuda",
+        type: "person",
+        status: "hangout",
+        gender: "male",
+        availability: "weekend",
+        openFor: "partner",
+        note: "Wants to join a boat cruise.",
+        visitWhen: "Planning a boat cruise weekend",
+        photos: ["https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80"],
+      },
+    ],
     postedAt: "Posted 4 days ago",
     views: 2904,
     historyNotes: ["Resort contact confirmed", "Visitor photos matched location", "Activity pricing needs regular updates"],
@@ -402,6 +479,45 @@ const resortListings = [
     openToGroups: false,
     openToPartner: false,
     plannedVisitors: ["Anesu wants to visit soon", "Brian is planning for August", "Tariro is open to another trip"],
+    planningPeople: [
+      {
+        name: "Anesu",
+        type: "person",
+        status: "planning",
+        gender: "female",
+        availability: "anytime",
+        openFor: "partner",
+        note: "Wants to visit soon and compare activity prices.",
+        visitWhen: "Planning to visit soon",
+        photos: ["https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?auto=format&fit=crop&w=200&q=80"],
+      },
+      {
+        name: "Brian",
+        type: "person",
+        status: "planning",
+        gender: "male",
+        availability: "august",
+        openFor: "partner",
+        note: "Planning for August.",
+        visitWhen: "Planning for August",
+        photos: ["https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80"],
+      },
+      {
+        name: "Tariro friends",
+        type: "group",
+        status: "hangout",
+        gender: "mixed",
+        availability: "soon",
+        openFor: "group",
+        note: "Open to another trip with a small travel group.",
+        visitWhen: "Planning another trip soon",
+        photos: [
+          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
+          "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80",
+          "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80",
+        ],
+      },
+    ],
     postedAt: "Posted 6 days ago",
     views: 4102,
     historyNotes: ["Visitor memory posts detected", "Host profile verified", "Resort verification pending"],
@@ -549,6 +665,7 @@ function renderListings(view = "home") {
           </div>
           <div class="verification-overlay" hidden></div>
           <div class="resort-overlay" hidden></div>
+          <div class="planning-overlay" hidden></div>
           <div class="history-overlay" hidden></div>
           <div class="detail-panel" aria-live="polite" hidden></div>
         </article>`;
@@ -571,8 +688,7 @@ function renderListingSpecs(listing) {
       <span aria-label="${listing.accommodationProvided ? "Accommodation provided" : "No accommodation"}">${iconBed()}${listing.accommodationProvided ? "Stay" : "No stay"}</span>
       <button type="button" data-detail="activities" aria-label="View resort activities">${iconActivity()}${listing.activities.length}</button>
       <button type="button" data-detail="visitors" aria-label="View people who visited">${iconVisitors()}${listing.visitors.length}</button>
-      <button class="${listing.userPlanned ? "active" : ""}" type="button" data-detail="plan" aria-label="Plan to visit this resort">${iconPlan()}${listing.plannedCount}</button>
-      <button class="${listing.userHangout ? "active" : ""}" type="button" data-detail="hangout" aria-label="People open to hang out here">${iconHangout()}${listing.hangoutCount}</button>`;
+      <button class="${listing.userPlanned ? "active" : ""}" type="button" data-detail="plan" aria-label="Plan to visit this resort">${iconPlan()}${listing.plannedCount}</button>`;
   }
 
   return `
@@ -618,8 +734,8 @@ function renderResortPlanPanel(listing) {
       <button type="button" data-resort-close aria-label="Close visit plan">x</button>
     </div>
     <div class="plan-counts">
-      <span>${listing.plannedCount} planning</span>
-      <span>${listing.hangoutCount} open to go together</span>
+      <button type="button" data-plan-people="planning">${listing.plannedCount} planning</button>
+      <button type="button" data-plan-people="hangout">${listing.hangoutCount} open to go together</button>
     </div>
     <div class="plan-options">
       <strong>Time period</strong>
@@ -636,6 +752,150 @@ function renderResortPlanPanel(listing) {
     </div>
     <div class="plan-counts">
       <span>${listing.planTiming === "dates" && listing.planDate ? listing.planDate : "Anytime"}</span>
+    </div>`;
+}
+
+function renderPlanningOverlay(listing, filter = "planning", criteria = {}) {
+  const activeFilters = criteria.activeFilters || [];
+  const query = criteria.query || "";
+  const safeQuery = escapeAttr(query);
+  const people = filterPlanningPeople(getPlanningPeople(listing, filter), activeFilters, query);
+  return `
+    <div class="planning-backdrop" data-people-mode="${filter}">
+      <div class="planning-header">
+        <strong>${filter === "hangout" ? "Open to go together" : "Planning to go"}</strong>
+        <button type="button" data-planning-close aria-label="Close planning people">x</button>
+      </div>
+      <div class="planning-tools">
+        <label class="planning-search">
+          ${iconSearch()}
+          <input type="search" data-planning-search placeholder="Search name, date, trip..." value="${safeQuery}">
+        </label>
+        <div class="planning-filter-row" aria-label="Planning filters">
+          ${renderPlanningFilterButton("all", "All", activeFilters)}
+          ${renderPlanningFilterButton("female", "Females", activeFilters)}
+          ${renderPlanningFilterButton("male", "Males", activeFilters)}
+          ${renderPlanningFilterButton("anytime", "Anytime", activeFilters)}
+          ${renderPlanningFilterButton("groups", "Groups", activeFilters)}
+          ${renderPlanningFilterButton("partners", "Partners", activeFilters)}
+        </div>
+      </div>
+      <div class="floating-people" aria-label="People planning this resort">
+        ${people.length ? people.map((person, index) => renderFloatingPerson(person, index)).join("") : `<div class="planning-empty">No matches yet</div>`}
+      </div>
+      <div class="planning-profile" hidden></div>
+    </div>`;
+}
+
+function escapeAttr(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
+function renderPlanningFilterButton(value, label, activeFilters) {
+  const isActive = value === "all" ? activeFilters.length === 0 : activeFilters.includes(value);
+  return `<button class="${isActive ? "active" : ""}" type="button" data-planning-filter="${value}">${label}</button>`;
+}
+
+function getPlanningPeople(listing, filter = "planning") {
+  const targetCount = filter === "hangout" ? listing.hangoutCount : listing.plannedCount;
+  const sourcePeople = listing.planningPeople.filter((person) => person.status === filter);
+  const people = [...sourcePeople];
+  const fallbackPhotos = listing.planningPeople.flatMap((person) => person.photos);
+
+  while (people.length < targetCount) {
+    const index = people.length;
+    const isGroup = index % 4 === 2;
+    people.push({
+      name: isGroup ? `Trip group ${index + 1}` : `Planner ${index + 1}`,
+      type: isGroup ? "group" : "person",
+      status: filter,
+      gender: isGroup ? "mixed" : index % 2 === 0 ? "female" : "male",
+      availability: index % 3 === 0 ? "anytime" : filter === "hangout" ? "soon" : "dates soon",
+      openFor: isGroup ? "group" : "partner",
+      note: isGroup ? "Planning as a small group and checking dates." : "Interested in this resort and watching the plan.",
+      visitWhen: filter === "hangout" ? "Open to agree dates together" : "Planning dates soon",
+      photos: isGroup ? fallbackPhotos.slice(0, 3) : [fallbackPhotos[index % fallbackPhotos.length]],
+    });
+  }
+
+  return people.slice(0, targetCount);
+}
+
+function filterPlanningPeople(people, activeFilters = [], query = "") {
+  const normalizedQuery = normalizePlanningSearch(query);
+  return people.filter((person) => {
+    const matchesFilter =
+      activeFilters.length === 0 ||
+      activeFilters.every((filter) => {
+        return (
+          (filter === "female" && person.gender === "female") ||
+          (filter === "male" && person.gender === "male") ||
+          (filter === "anytime" && person.availability === "anytime") ||
+          (filter === "groups" && person.type === "group") ||
+          (filter === "partners" && person.openFor === "partner")
+        );
+      });
+    const haystack = getPlanningSearchText(person);
+    return matchesFilter && (!normalizedQuery || haystack.includes(normalizedQuery));
+  });
+}
+
+function normalizePlanningSearch(value) {
+  return String(value).trim().toLowerCase();
+}
+
+function getPlanningSearchText(person) {
+  const genderWords = {
+    female: "female females woman women lady ladies",
+    male: "male males man men guy guys",
+    mixed: "mixed group groups people",
+  };
+  const typeWords = person.type === "group" ? "group groups family families team" : "person partner partners solo";
+  const openWords = person.openFor === "group" ? "group groups" : "partner partners";
+  return `${person.name} ${person.note} ${person.visitWhen} ${person.availability} ${person.openFor} ${person.gender} ${genderWords[person.gender] || ""} ${typeWords} ${openWords}`.toLowerCase();
+}
+
+function getPlanningCriteria(overlay) {
+  return {
+    activeFilters: Array.from(overlay.querySelectorAll("[data-planning-filter].active"))
+      .map((button) => button.dataset.planningFilter)
+      .filter((filter) => filter !== "all"),
+    query: overlay.querySelector("[data-planning-search]")?.value || "",
+  };
+}
+
+function renderFloatingPerson(person, index) {
+  const photoMarkup = person.photos
+    .slice(0, 3)
+    .map((photo) => `<span style="background-image: url('${photo}')"></span>`)
+    .join("");
+  return `
+    <button class="floating-person ${person.status} ${person.type}" type="button" data-floating-person="${index}" style="--float-delay: ${index * 1.15}s; --float-left: ${16 + ((index * 27) % 58)}%;">
+      ${photoMarkup}
+    </button>`;
+}
+
+function renderPlanningProfile(person) {
+  const canJoin = person.status === "hangout";
+  return `
+    <button type="button" data-planning-profile-close aria-label="Close planning profile">x</button>
+    <div class="planning-profile-images ${person.type}">
+      ${person.photos
+        .slice(0, 3)
+        .map((photo) => `<span style="background-image: url('${photo}')"></span>`)
+        .join("")}
+    </div>
+    <strong>${person.name}</strong>
+    <p>${person.note}</p>
+    <span class="planning-visit-time">${person.visitWhen || "Planning dates soon"}</span>
+    <div class="planning-profile-actions">
+      ${canJoin ? `<button type="button" data-request-join>${person.type === "group" ? "Request group" : "Request to join"}</button>` : ""}
+      <button type="button" data-social-action="follow">Follow</button>
+      <button type="button" data-social-action="friend">Friend</button>
     </div>`;
 }
 
@@ -772,6 +1032,10 @@ function iconHistory() {
 
 function iconSun() {
   return `<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M11 2h2v3h-2V2Zm0 17h2v3h-2v-3ZM2 11h3v2H2v-2Zm17 0h3v2h-3v-2ZM4.2 5.6l1.4-1.4 2.1 2.1-1.4 1.4-2.1-2.1Zm12.1 12.1 1.4-1.4 2.1 2.1-1.4 1.4-2.1-2.1Zm2.1-13.5 1.4 1.4-2.1 2.1-1.4-1.4 2.1-2.1ZM6.3 16.3l1.4 1.4-2.1 2.1-1.4-1.4 2.1-2.1ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z" /></svg>`;
+}
+
+function iconSearch() {
+  return `<svg aria-hidden="true" viewBox="0 0 24 24"><path d="M10.8 4a6.8 6.8 0 0 1 5.4 10.9l3.4 3.4-1.4 1.4-3.4-3.4A6.8 6.8 0 1 1 10.8 4Zm0 2a4.8 4.8 0 1 0 0 9.6 4.8 4.8 0 0 0 0-9.6Z" /></svg>`;
 }
 
 function iconActivity() {
@@ -977,7 +1241,10 @@ document.addEventListener("click", (event) => {
     card.querySelector('[data-detail="plan"]')?.classList.toggle("active", Boolean(listing?.userPlanned));
     card.querySelector('[data-detail="hangout"]')?.classList.toggle("active", Boolean(listing?.userHangout));
     card.querySelector('[data-detail="plan"]').lastChild.textContent = String(listing?.plannedCount || 0);
-    card.querySelector('[data-detail="hangout"]').lastChild.textContent = String(listing?.hangoutCount || 0);
+    const hangoutButton = card.querySelector('[data-detail="hangout"]');
+    if (hangoutButton) {
+      hangoutButton.lastChild.textContent = String(listing?.hangoutCount || 0);
+    }
     return;
   }
 
@@ -1041,6 +1308,81 @@ document.addEventListener("click", (event) => {
 });
 
 document.addEventListener("click", (event) => {
+  const planPeopleButton = event.target.closest("[data-plan-people]");
+  if (planPeopleButton) {
+    const card = planPeopleButton.closest(".property-card");
+    const listing = listingFromCard(card);
+    const overlay = card.querySelector(".planning-overlay");
+    overlay.innerHTML = renderPlanningOverlay(listing, planPeopleButton.dataset.planPeople);
+    overlay.hidden = false;
+    return;
+  }
+
+  const planningClose = event.target.closest("[data-planning-close]");
+  if (planningClose) {
+    planningClose.closest(".planning-overlay").hidden = true;
+    return;
+  }
+
+  const planningProfileClose = event.target.closest("[data-planning-profile-close]");
+  if (planningProfileClose) {
+    planningProfileClose.closest(".planning-profile").hidden = true;
+    return;
+  }
+
+  const floatingPerson = event.target.closest("[data-floating-person]");
+  if (floatingPerson) {
+    const card = floatingPerson.closest(".property-card");
+    const listing = listingFromCard(card);
+    const overlay = floatingPerson.closest(".planning-overlay");
+    const filter = overlay.querySelector(".planning-backdrop").dataset.peopleMode || "planning";
+    const criteria = getPlanningCriteria(overlay);
+    const person = filterPlanningPeople(getPlanningPeople(listing, filter), criteria.activeFilters, criteria.query)[Number(floatingPerson.dataset.floatingPerson)];
+    const profile = card.querySelector(".planning-profile");
+    profile.innerHTML = renderPlanningProfile(person);
+    profile.hidden = false;
+    return;
+  }
+
+  const planningFilter = event.target.closest("[data-planning-filter]");
+  if (planningFilter) {
+    const overlay = planningFilter.closest(".planning-overlay");
+    const card = planningFilter.closest(".property-card");
+    const listing = listingFromCard(card);
+    const filter = overlay.querySelector(".planning-backdrop").dataset.peopleMode || "planning";
+    const criteria = getPlanningCriteria(overlay);
+    const selectedFilter = planningFilter.dataset.planningFilter;
+    if (selectedFilter === "all") {
+      criteria.activeFilters = [];
+    } else if (criteria.activeFilters.includes(selectedFilter)) {
+      criteria.activeFilters = criteria.activeFilters.filter((filterName) => filterName !== selectedFilter);
+    } else {
+      criteria.activeFilters = [...criteria.activeFilters, selectedFilter];
+    }
+    overlay.innerHTML = renderPlanningOverlay(listing, filter, criteria);
+    overlay.hidden = false;
+    return;
+  }
+
+  const socialAction = event.target.closest("[data-social-action]");
+  if (socialAction) {
+    const isActive = socialAction.classList.toggle("active");
+    const action = socialAction.dataset.socialAction;
+    if (action === "follow") {
+      socialAction.textContent = isActive ? "Follow request sent" : "Follow";
+    } else {
+      socialAction.textContent = isActive ? "Friend request sent" : "Friend";
+    }
+    return;
+  }
+
+  const requestJoin = event.target.closest("[data-request-join]");
+  if (requestJoin) {
+    requestJoin.textContent = "Request sent";
+    requestJoin.classList.add("active");
+    return;
+  }
+
   const planChoice = event.target.closest("[data-plan-choice]");
   if (planChoice) {
     const card = planChoice.closest(".property-card");
@@ -1060,8 +1402,11 @@ document.addEventListener("click", (event) => {
 
     card.querySelector('[data-detail="plan"]').classList.toggle("active", listing.userPlanned);
     card.querySelector('[data-detail="plan"]').lastChild.textContent = String(listing.plannedCount);
-    card.querySelector('[data-detail="hangout"]').classList.toggle("active", listing.userHangout);
-    card.querySelector('[data-detail="hangout"]').lastChild.textContent = String(listing.hangoutCount);
+    const hangoutButton = card.querySelector('[data-detail="hangout"]');
+    if (hangoutButton) {
+      hangoutButton.classList.toggle("active", listing.userHangout);
+      hangoutButton.lastChild.textContent = String(listing.hangoutCount);
+    }
     card.querySelector(".resort-overlay").innerHTML = renderResortPlanPanel(listing);
     return;
   }
@@ -1094,8 +1439,11 @@ document.addEventListener("click", (event) => {
       }
       listing.openToPartner = nextPartner;
       listing.userHangout = nextPartner;
-      card.querySelector('[data-detail="hangout"]').classList.toggle("active", listing.userHangout);
-      card.querySelector('[data-detail="hangout"]').lastChild.textContent = String(listing.hangoutCount);
+      const hangoutButton = card.querySelector('[data-detail="hangout"]');
+      if (hangoutButton) {
+        hangoutButton.classList.toggle("active", listing.userHangout);
+        hangoutButton.lastChild.textContent = String(listing.hangoutCount);
+      }
     }
     card.querySelector(".resort-overlay").innerHTML = renderResortPlanPanel(listing);
     return;
@@ -1234,6 +1582,21 @@ document.addEventListener("change", (event) => {
   listing.planDate = planDate.value;
   listing.planTiming = "dates";
   card.querySelector(".resort-overlay").innerHTML = renderResortPlanPanel(listing);
+});
+
+document.addEventListener("input", (event) => {
+  const planningSearch = event.target.closest("[data-planning-search]");
+  if (!planningSearch) return;
+  const overlay = planningSearch.closest(".planning-overlay");
+  const card = planningSearch.closest(".property-card");
+  const listing = listingFromCard(card);
+  const filter = overlay.querySelector(".planning-backdrop").dataset.peopleMode || "planning";
+  const criteria = getPlanningCriteria(overlay);
+  overlay.innerHTML = renderPlanningOverlay(listing, filter, criteria);
+  overlay.hidden = false;
+  const refreshedSearch = overlay.querySelector("[data-planning-search]");
+  refreshedSearch.focus();
+  refreshedSearch.setSelectionRange(refreshedSearch.value.length, refreshedSearch.value.length);
 });
 
 googleLogin.addEventListener("click", () => {
