@@ -1957,7 +1957,7 @@ select:focus {
 
 @media (max-width: 699px) {
   html {
-    scroll-snap-type: y mandatory;
+    scroll-snap-type: y proximity;
   }
 
   .home-screen {
@@ -1981,7 +1981,6 @@ select:focus {
     border-radius: 0;
     box-shadow: none;
     scroll-snap-align: start;
-    scroll-snap-stop: always;
   }
 
   .property-gallery,
