@@ -776,6 +776,41 @@ select:focus {
   background: rgba(18, 106, 74, 0.82);
 }
 
+.property-specs .resort-trust-action {
+  width: 38px;
+  justify-content: center;
+  padding: 0;
+}
+
+.property-specs .resort-trust-action.verified,
+.property-specs .resort-trust-agent.verified {
+  border-color: rgba(212, 154, 42, 0.92);
+  background: rgba(212, 154, 42, 0.9);
+  color: var(--ink);
+}
+
+.property-specs .resort-trust-action.unverified,
+.property-specs .resort-trust-agent.unverified {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(105, 111, 107, 0.84);
+}
+
+.property-specs .resort-trust-agent {
+  width: 40px;
+  min-width: 40px;
+  justify-content: center;
+  padding: 2px;
+}
+
+.property-specs .resort-trust-agent span {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 50%;
+  background-position: center;
+  background-size: cover;
+}
+
 .property-specs button.active {
   background: var(--gold);
   color: var(--ink);
@@ -859,6 +894,23 @@ select:focus {
 .image-actions button.active {
   border-color: var(--gold);
   background: rgba(18, 106, 74, 0.92);
+}
+
+.image-actions .resort-social-action {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(18, 106, 74, 0.82);
+}
+
+.image-actions .resort-social-action.active {
+  border-color: rgba(212, 154, 42, 0.94);
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.image-actions .resort-social-action.planned:not(.active) {
+  border-color: rgba(212, 154, 42, 0.58);
+  background: rgba(18, 106, 74, 0.82);
+  color: #fff;
 }
 
 .image-actions .like-button.liked {
@@ -1539,6 +1591,130 @@ select:focus {
   font-weight: 900;
 }
 
+.visited-tabs,
+.friends-tools {
+  position: absolute;
+  right: 14px;
+  left: 14px;
+  z-index: 3;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.visited-tabs {
+  top: 58px;
+}
+
+.friends-tools {
+  top: 104px;
+}
+
+.visited-filter-panel {
+  position: absolute;
+  top: 104px;
+  right: 14px;
+  left: 14px;
+  z-index: 3;
+  display: grid;
+  gap: 8px;
+  max-height: 148px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.visited-filter-group {
+  display: grid;
+  gap: 5px;
+}
+
+.visited-filter-group strong {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.visited-filter-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-color: rgba(212, 154, 42, 0.85) rgba(255, 255, 255, 0.12);
+  scrollbar-width: thin;
+}
+
+.visited-tabs::-webkit-scrollbar,
+.friends-tools::-webkit-scrollbar {
+  display: none;
+}
+
+.visited-tabs button,
+.friends-tools button,
+.visited-filter-row button,
+.visited-filter-row label {
+  flex: 0 0 auto;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(18, 25, 21, 0.74);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 900;
+  padding: 0 11px;
+}
+
+.visited-filter-row label {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.72rem;
+  padding: 0 9px;
+}
+
+.visited-filter-row input {
+  width: 104px;
+  min-height: 28px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #fff;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 900;
+  outline: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.visited-filter-row input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(1);
+  opacity: 0.8;
+}
+
+.visited-tabs button.active,
+.friends-tools button.active,
+.visited-filter-row button.active {
+  border-color: rgba(212, 154, 42, 0.9);
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.visited-filter-row::-webkit-scrollbar {
+  height: 5px;
+}
+
+.visited-filter-row::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.visited-filter-row::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(212, 154, 42, 0.85);
+}
+
 .floating-people {
   position: absolute;
   inset: 0;
@@ -1579,6 +1755,14 @@ select:focus {
   border-color: var(--gold);
   box-shadow:
     0 0 0 4px rgba(212, 154, 42, 0.18),
+    0 16px 30px rgba(0, 0, 0, 0.25);
+}
+
+.floating-person.visited {
+  border-width: 5px;
+  border-color: rgba(18, 106, 74, 0.95);
+  box-shadow:
+    0 0 0 4px rgba(18, 106, 74, 0.2),
     0 16px 30px rgba(0, 0, 0, 0.25);
 }
 
@@ -1718,6 +1902,117 @@ select:focus {
 .planning-profile-actions button.active {
   background: var(--gold);
   color: var(--ink);
+}
+
+.friend-confirm {
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(10, 17, 13, 0.78);
+  padding: 6px;
+}
+
+.friend-confirm span {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.78rem;
+  font-weight: 900;
+  padding-left: 6px;
+}
+
+.friend-confirm button {
+  min-height: 30px;
+  padding: 0 12px;
+}
+
+.friend-confirm button:last-child {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+.visitor-memory-strip {
+  display: flex;
+  gap: 6px;
+  width: calc(100% + 24px);
+  margin: 0 -12px 12px;
+  overflow-x: auto;
+  padding: 0 12px 6px;
+  scrollbar-color: rgba(212, 154, 42, 0.85) rgba(255, 255, 255, 0.12);
+  scrollbar-width: thin;
+}
+
+.visitor-memory-strip::-webkit-scrollbar {
+  height: 5px;
+}
+
+.visitor-memory-strip::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.visitor-memory-strip::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(212, 154, 42, 0.85);
+}
+
+.visitor-memory-strip span {
+  flex: 0 0 min(82%, 360px);
+  min-height: 118px;
+  border-radius: 8px;
+  background-position: center;
+  background-size: cover;
+}
+
+.visitor-trips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.visitor-trips strong {
+  flex: 0 0 100%;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.76rem;
+}
+
+.visitor-trips button {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 900;
+  padding: 0 10px;
+}
+
+.visitor-comments {
+  max-width: 420px;
+  margin-bottom: 10px;
+  margin-inline: auto;
+}
+
+.visitor-comments p {
+  margin: 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  padding: 9px 11px;
+}
+
+.trip-reel-strip span {
+  min-height: 180px;
 }
 
 .verification-status {

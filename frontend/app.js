@@ -597,9 +597,14 @@ function renderListings(view = "home") {
                     <div class="image-actions" aria-label="Listing actions">
                       <button class="like-button ${listing.liked ? "liked" : ""}" type="button" data-detail="likes" data-liked="${listing.liked}" aria-label="Like property">${iconHeart()}<span>${listing.likes}</span></button>
                       <button type="button" data-detail="comments" aria-label="Open comments">${iconComment()}<span>${listing.comments}</span></button>
-                      <button class="verify-chip icon-only ${listing.propertyVerified ? "verified" : "unverified"}" type="button" data-detail="property" aria-label="${listing.propertyVerified ? "Verified property" : "Unverified property"}">${iconVerifiedProperty()}</button>
+                      ${listing.category === "resort" ? renderResortSocialActions(listing) : ""}
+                      ${
+                        listing.category !== "resort"
+                          ? `<button class="verify-chip icon-only ${listing.propertyVerified ? "verified" : "unverified"}" type="button" data-detail="property" aria-label="${listing.propertyVerified ? "Verified property" : "Unverified property"}">${iconVerifiedProperty()}</button>
                       <button class="agent-trigger ${listing.posterVerified ? "verified" : "unverified"}" type="button" data-detail="poster" aria-label="Open ${listing.poster} agent options"><span style="background-image: url('${listing.posterPhoto}')"></span></button>
-                      <button class="icon-only" type="button" data-detail="history" aria-label="View property history">${iconHistory()}</button>
+                      <button class="icon-only" type="button" data-detail="history" aria-label="View property history">${iconHistory()}</button>`
+                          : ""
+                      }
                       ${listing.allowsWhatsapp ? `<a class="whatsapp-chip icon-only" href="${whatsappLink(listing)}" target="_blank" rel="noopener" aria-label="Chat with ${listing.poster} on WhatsApp">${iconWhatsapp()}</a>` : ""}
                     </div>`
                   : ""
@@ -686,15 +691,22 @@ function renderListingSpecs(listing) {
     return `
       <span aria-label="${listing.dayTrip ? "Day trip available" : "Booking stay only"}">${iconSun()}${listing.dayTrip ? "Day trip" : "Stay only"}</span>
       <span aria-label="${listing.accommodationProvided ? "Accommodation provided" : "No accommodation"}">${iconBed()}${listing.accommodationProvided ? "Stay" : "No stay"}</span>
-      <button type="button" data-detail="activities" aria-label="View resort activities">${iconActivity()}${listing.activities.length}</button>
-      <button type="button" data-detail="visitors" aria-label="View people who visited">${iconVisitors()}${listing.visitors.length}</button>
-      <button class="${listing.userPlanned ? "active" : ""}" type="button" data-detail="plan" aria-label="Plan to visit this resort">${iconPlan()}${listing.plannedCount}</button>`;
+      <button class="resort-trust-action ${listing.propertyVerified ? "verified" : "unverified"}" type="button" data-detail="property" aria-label="${listing.propertyVerified ? "Verified resort" : "Unverified resort"}">${iconVerifiedProperty()}</button>
+      <button class="resort-trust-agent ${listing.posterVerified ? "verified" : "unverified"}" type="button" data-detail="poster" aria-label="Open ${listing.poster} agent options"><span style="background-image: url('${listing.posterPhoto}')"></span></button>
+      <button class="resort-trust-action" type="button" data-detail="history" aria-label="View resort history">${iconHistory()}</button>`;
   }
 
   return `
     <span aria-label="${listing.rooms} rooms">${iconRooms()}${listing.rooms}</span>
     <span aria-label="${listing.bedrooms} bedrooms">${iconBed()}${listing.bedrooms}</span>
     <span aria-label="${listing.bathrooms} bathrooms">${iconBath()}${listing.bathrooms}</span>`;
+}
+
+function renderResortSocialActions(listing) {
+  return `
+    <button class="resort-social-action" type="button" data-detail="visitors" aria-label="View people who visited">${iconVisitors()}<span>${listing.visitors.length}</span></button>
+    <button class="resort-social-action" type="button" data-detail="activities" aria-label="View resort activities">${iconActivity()}<span>${listing.activities.length}</span></button>
+    <button class="resort-social-action ${listing.userPlanned ? "planned" : ""}" type="button" data-detail="plan" aria-label="Plan to visit this resort">${iconPlan()}<span>${listing.plannedCount}</span></button>`;
 }
 
 function renderComments(comments, filter) {
@@ -715,15 +727,203 @@ function renderResortPanel(listing, panelType) {
     return renderResortPlanPanel(listing);
   }
 
-  const isActivities = panelType === "activities";
-  const items = isActivities ? listing.activities : listing.visitors;
+  const items = listing.activities;
   return `
     <div class="resort-header">
-      <strong>${isActivities ? "Activities" : "Visited before"}</strong>
-      <button type="button" data-resort-close aria-label="Close ${isActivities ? "activities" : "visitors"}">x</button>
+      <strong>Activities</strong>
+      <button type="button" data-resort-close aria-label="Close activities">x</button>
     </div>
     <div class="resort-list">
-      ${items.map((item) => `<p>${isActivities ? iconActivity() : iconVisitors()}<span>${item}</span></p>`).join("")}
+      ${items.map((item) => `<p>${iconActivity()}<span>${item}</span></p>`).join("")}
+    </div>`;
+}
+
+function renderVisitedOverlay(listing, mode = "visited", filters = {}) {
+  const people = getVisitedPeople(listing);
+  const friends = getResortFriends(listing);
+  const planningPeople = getPlanningPeople(listing, "planning");
+  const outingPeople = getPlanningPeople(listing, "hangout");
+  const sourcePeople =
+    mode === "friends" ? friends : mode === "planning" ? planningPeople : mode === "outings" ? outingPeople : people;
+  const activePeople = mode === "visited" ? filterVisitedPeople(sourcePeople, filters) : sourcePeople;
+  return `
+    <div class="planning-backdrop visited-backdrop" data-people-mode="${mode}">
+      <div class="planning-header">
+        <strong>${getVisitedModeTitle(mode)}</strong>
+        <button type="button" data-planning-close aria-label="Close visited people">x</button>
+      </div>
+      <div class="visited-tabs" aria-label="Visited options">
+        <button class="${mode === "visited" ? "active" : ""}" type="button" data-visited-mode="visited">Visited</button>
+        <button class="${mode === "friends" ? "active" : ""}" type="button" data-visited-mode="friends">Friends</button>
+        <button class="${mode === "planning" ? "active" : ""}" type="button" data-visited-mode="planning">Planning</button>
+        <button class="${mode === "outings" ? "active" : ""}" type="button" data-visited-mode="outings">Open outings</button>
+      </div>
+      ${mode === "friends" ? renderFriendsTools() : ""}
+      ${mode === "visited" ? renderVisitedFilters(filters) : ""}
+      <div class="floating-people" aria-label="People who visited this resort">
+        ${activePeople.map((person, index) => renderVisitedPerson(person, index)).join("")}
+      </div>
+      <div class="planning-profile visited-profile" hidden></div>
+    </div>`;
+}
+
+function getVisitedModeTitle(mode) {
+  const titles = {
+    visited: "Visited before",
+    friends: "Friends",
+    planning: "Planning to go",
+    outings: "Open for outings",
+  };
+  return titles[mode] || titles.visited;
+}
+
+function getVisitedPeople(listing) {
+  const fallbackPhotos = listing.planningPeople.flatMap((person) => person.photos);
+  return listing.visitors.map((visitor, index) => {
+    const name = visitor.split(" visited")[0].split(" went")[0].split(" stayed")[0];
+    return {
+      name,
+      note: visitor,
+      status: "visited",
+      type: index === 2 ? "group" : "person",
+      gender: index === 1 ? "male" : index === 2 ? "mixed" : "female",
+      ageBand: ["18-25", "26-35", "36-50"][index % 3],
+      tripFrequency: ["1-5", "6-10", "10+"][index % 3],
+      visitDate: ["2026-06-12", "2026-08-04", "2026-01-18"][index % 3],
+      visitWhen: ["Visited last month", "Visited in December", "Visited during school holidays", "Visited 2 weeks ago"][index % 4],
+      plannedTrips: ["Kariba weekend", "Vumba day trip", "Victoria Falls stay"].slice(0, 1 + (index % 3)),
+      photos: [fallbackPhotos[index % fallbackPhotos.length]],
+      memoryPhotos: listing.images.slice(0, 3),
+      comment: ["Beautiful place, the pool area was clean.", "Road was okay, best to arrive before dark.", "Staff were helpful with activities."][index % 3],
+      isFriend: index === 0,
+    };
+  });
+}
+
+function renderVisitedFilters(filters) {
+  const activeFilters = filters.activeFilters || [];
+  return `
+    <div class="visited-filter-panel" aria-label="Visited filters">
+      <div class="visited-filter-group">
+        <strong>Gender</strong>
+        <div class="visited-filter-row">
+          ${renderVisitedFilterButton("female", "Females", activeFilters)}
+          ${renderVisitedFilterButton("male", "Males", activeFilters)}
+          ${renderVisitedFilterButton("groups", "Groups", activeFilters)}
+        </div>
+      </div>
+      <div class="visited-filter-group">
+        <strong>Age range</strong>
+        <div class="visited-filter-row">
+          ${renderVisitedFilterButton("18-25", "18-25", activeFilters)}
+          ${renderVisitedFilterButton("26-35", "26-35", activeFilters)}
+          ${renderVisitedFilterButton("36-50", "36-50", activeFilters)}
+          ${renderVisitedFilterButton("50+", "50+", activeFilters)}
+        </div>
+      </div>
+      <div class="visited-filter-group">
+        <strong>Trip frequency</strong>
+        <div class="visited-filter-row">
+          ${renderVisitedFilterButton("1-5", "1-5 trips", activeFilters)}
+          ${renderVisitedFilterButton("6-10", "6-10 trips", activeFilters)}
+          ${renderVisitedFilterButton("10+", "10+ trips", activeFilters)}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderVisitedFilterButton(value, label, activeFilters) {
+  return `<button class="${activeFilters.includes(value) ? "active" : ""}" type="button" data-visited-filter="${value}">${label}</button>`;
+}
+
+function filterVisitedPeople(people, filters = {}) {
+  const activeFilters = filters.activeFilters || [];
+  const genderFilters = activeFilters.filter((filter) => ["female", "male"].includes(filter));
+  const typeFilters = activeFilters.filter((filter) => filter === "groups");
+  const ageFilters = activeFilters.filter((filter) => ["18-25", "26-35", "36-50", "50+"].includes(filter));
+  const tripFilters = activeFilters.filter((filter) => ["1-5", "6-10", "10+"].includes(filter));
+
+  return people.filter((person) => {
+    const matchesGender = genderFilters.length === 0 || genderFilters.includes(person.gender);
+    const matchesType = typeFilters.length === 0 || typeFilters.some((filter) => filter === "groups" && person.type === "group");
+    const matchesAge = ageFilters.length === 0 || ageFilters.includes(person.ageBand);
+    const matchesTrips = tripFilters.length === 0 || tripFilters.includes(person.tripFrequency);
+    return matchesGender && matchesType && matchesAge && matchesTrips;
+  });
+}
+
+function getResortFriends(listing) {
+  const fallbackPhotos = listing.planningPeople.flatMap((person) => person.photos);
+  return ["Nyasha", "Kuda", "Vimbai", "Tariro"].map((name, index) => ({
+    name,
+    note: index % 2 === 0 ? "Friend who may enjoy this place." : "Friend who likes resort weekends.",
+    status: "friend",
+    type: index === 2 ? "group" : "person",
+    visitWhen: index % 2 === 0 ? "Free next weekend" : "Can plan dates together",
+    plannedTrips: ["Nyanga lodge", "Kariba weekend"].slice(0, 1 + (index % 2)),
+    photos: [fallbackPhotos[index % fallbackPhotos.length]],
+    memoryPhotos: listing.images.slice(0, 3),
+    comment: "Likes outdoor trips.",
+    isFriend: index < 2,
+  }));
+}
+
+function renderFriendsTools() {
+  return `
+    <div class="friends-tools">
+      <button type="button" data-friend-tool="invite">Invite for trip</button>
+      <button type="button" data-friend-tool="group">Create group</button>
+      <button type="button" data-friend-tool="ping">Ping place</button>
+    </div>`;
+}
+
+function renderVisitedPerson(person, index) {
+  return `
+    <button class="floating-person visited ${person.status} ${person.type}" type="button" data-visited-person="${index}" style="--float-delay: ${index * 1.2}s; --float-left: ${18 + ((index * 29) % 56)}%;">
+      ${person.photos.slice(0, 3).map((photo) => `<span style="background-image: url('${photo}')"></span>`).join("")}
+    </button>`;
+}
+
+function renderVisitedProfile(person) {
+  const friendMode = person.status === "friend";
+  return `
+    <button type="button" data-planning-profile-close aria-label="Close visitor profile">x</button>
+    <div class="planning-profile-images ${person.type}">
+      <span style="background-image: url('${person.photos[0]}')"></span>
+    </div>
+    <strong>${person.name}</strong>
+    <p>${person.note}</p>
+    <span class="planning-visit-time">${person.visitWhen}</span>
+    <div class="visitor-memory-strip" aria-label="Photos taken during visit">
+      ${person.memoryPhotos.map((photo) => `<span style="background-image: url('${photo}')"></span>`).join("")}
+    </div>
+    <div class="visitor-trips">
+      <strong>Planned trips</strong>
+      ${person.plannedTrips.map((trip, index) => `<button type="button" data-trip-reel="${index}">${trip}</button>`).join("")}
+    </div>
+    <div class="visitor-comments">
+      <p>${person.comment}</p>
+    </div>
+    <div class="planning-profile-actions">
+      <button type="button" data-trip-invite data-default-label="${friendMode ? "Invite for trip" : "Invite to trip"}">${friendMode ? "Invite for trip" : "Invite to trip"}</button>
+      ${friendMode ? `<button type="button" data-friend-tool="ping">Ping place</button>` : ""}
+      <button type="button" data-social-action="follow">Follow</button>
+      <button class="${person.isFriend ? "active" : ""}" type="button" data-social-action="friend" data-friend-state="${person.isFriend ? "friend" : "none"}">${person.isFriend ? "Friend" : "Friend"}</button>
+    </div>`;
+}
+
+function renderTripReel(person, tripIndex = 0) {
+  const trip = person.plannedTrips[tripIndex] || person.plannedTrips[0] || "Planned trip";
+  return `
+    <button type="button" data-planning-profile-close aria-label="Close trip reel">x</button>
+    <strong>${trip}</strong>
+    <p>${person.name}'s trip reel preview for this place.</p>
+    <div class="visitor-memory-strip trip-reel-strip" aria-label="Trip reel photos">
+      ${person.memoryPhotos.map((photo) => `<span style="background-image: url('${photo}')"></span>`).join("")}
+    </div>
+    <div class="planning-profile-actions">
+      <button type="button" data-trip-invite data-default-label="Ask to join trip">Ask to join trip</button>
+      <button type="button" data-planning-profile-close>Back</button>
     </div>`;
 }
 
@@ -865,6 +1065,12 @@ function getPlanningCriteria(overlay) {
       .map((button) => button.dataset.planningFilter)
       .filter((filter) => filter !== "all"),
     query: overlay.querySelector("[data-planning-search]")?.value || "",
+  };
+}
+
+function getVisitedCriteria(overlay) {
+  return {
+    activeFilters: Array.from(overlay.querySelectorAll("[data-visited-filter].active")).map((button) => button.dataset.visitedFilter),
   };
 }
 
@@ -1215,7 +1421,19 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  if (["activities", "visitors", "plan", "hangout"].includes(detailButton.dataset.detail)) {
+  if (detailButton.dataset.detail === "visitors") {
+    document.querySelectorAll(".planning-overlay").forEach((overlay) => {
+      overlay.hidden = true;
+    });
+    const overlay = card.querySelector(".planning-overlay");
+    overlay.innerHTML = renderVisitedOverlay(listing);
+    overlay.hidden = false;
+    card.querySelectorAll("[data-detail]").forEach((button) => button.classList.remove("active"));
+    detailButton.classList.add("active");
+    return;
+  }
+
+  if (["activities", "plan", "hangout"].includes(detailButton.dataset.detail)) {
     document.querySelectorAll(".resort-overlay").forEach((overlay) => {
       overlay.hidden = true;
     });
@@ -1238,7 +1456,8 @@ document.addEventListener("click", (event) => {
     overlay.innerHTML = renderResortPanel(listing, detailButton.dataset.detail);
     overlay.hidden = false;
     card.querySelectorAll("[data-detail]").forEach((button) => button.classList.remove("active"));
-    card.querySelector('[data-detail="plan"]')?.classList.toggle("active", Boolean(listing?.userPlanned));
+    card.querySelector('[data-detail="plan"]')?.classList.toggle("planned", Boolean(listing?.userPlanned));
+    detailButton.classList.add("active");
     card.querySelector('[data-detail="hangout"]')?.classList.toggle("active", Boolean(listing?.userHangout));
     card.querySelector('[data-detail="plan"]').lastChild.textContent = String(listing?.plannedCount || 0);
     const hangoutButton = card.querySelector('[data-detail="hangout"]');
@@ -1344,6 +1563,87 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  const visitedPerson = event.target.closest("[data-visited-person]");
+  if (visitedPerson) {
+    const card = visitedPerson.closest(".property-card");
+    const listing = listingFromCard(card);
+    const overlay = visitedPerson.closest(".planning-overlay");
+    const mode = overlay.querySelector(".planning-backdrop").dataset.peopleMode || "visited";
+    const people =
+      mode === "friends"
+        ? getResortFriends(listing)
+        : mode === "planning"
+          ? getPlanningPeople(listing, "planning")
+          : mode === "outings"
+            ? getPlanningPeople(listing, "hangout")
+            : filterVisitedPeople(getVisitedPeople(listing), getVisitedCriteria(overlay));
+    const person = people[Number(visitedPerson.dataset.visitedPerson)];
+    const profile = card.querySelector(".planning-profile");
+    profile.dataset.personKind = mode;
+    profile.dataset.personIndex = visitedPerson.dataset.visitedPerson;
+    profile.innerHTML = mode === "planning" || mode === "outings" ? renderPlanningProfile(person) : renderVisitedProfile(person);
+    profile.hidden = false;
+    return;
+  }
+
+  const tripReel = event.target.closest("[data-trip-reel]");
+  if (tripReel) {
+    const card = tripReel.closest(".property-card");
+    const listing = listingFromCard(card);
+    const profile = tripReel.closest(".planning-profile");
+    const mode = profile.dataset.personKind || "visited";
+    const people = mode === "friends" ? getResortFriends(listing) : getVisitedPeople(listing);
+    const person = people[Number(profile.dataset.personIndex || 0)];
+    profile.innerHTML = renderTripReel(person, Number(tripReel.dataset.tripReel));
+    return;
+  }
+
+  const visitedMode = event.target.closest("[data-visited-mode]");
+  if (visitedMode) {
+    const card = visitedMode.closest(".property-card");
+    const listing = listingFromCard(card);
+    const overlay = card.querySelector(".planning-overlay");
+    overlay.innerHTML = renderVisitedOverlay(listing, visitedMode.dataset.visitedMode);
+    overlay.hidden = false;
+    return;
+  }
+
+  const visitedFilter = event.target.closest("[data-visited-filter]");
+  if (visitedFilter) {
+    const card = visitedFilter.closest(".property-card");
+    const listing = listingFromCard(card);
+    const overlay = card.querySelector(".planning-overlay");
+    const criteria = getVisitedCriteria(overlay);
+    const selectedFilter = visitedFilter.dataset.visitedFilter;
+    if (criteria.activeFilters.includes(selectedFilter)) {
+      criteria.activeFilters = criteria.activeFilters.filter((filter) => filter !== selectedFilter);
+    } else {
+      criteria.activeFilters = [...criteria.activeFilters, selectedFilter];
+    }
+    overlay.innerHTML = renderVisitedOverlay(listing, "visited", criteria);
+    overlay.hidden = false;
+    return;
+  }
+
+  const friendTool = event.target.closest("[data-friend-tool]");
+  if (friendTool) {
+    const labels = {
+      invite: "Invite sent",
+      group: "Group started",
+      ping: "Ping sent",
+    };
+    friendTool.textContent = labels[friendTool.dataset.friendTool] || "Sent";
+    friendTool.classList.add("active");
+    return;
+  }
+
+  const tripInvite = event.target.closest("[data-trip-invite]");
+  if (tripInvite) {
+    const isActive = tripInvite.classList.toggle("active");
+    tripInvite.textContent = isActive ? "Trip invite sent" : tripInvite.dataset.defaultLabel || "Invite to trip";
+    return;
+  }
+
   const planningFilter = event.target.closest("[data-planning-filter]");
   if (planningFilter) {
     const overlay = planningFilter.closest(".planning-overlay");
@@ -1366,13 +1666,44 @@ document.addEventListener("click", (event) => {
 
   const socialAction = event.target.closest("[data-social-action]");
   if (socialAction) {
+    if (socialAction.dataset.socialAction === "friend" && socialAction.dataset.friendState === "friend") {
+      const profile = socialAction.closest(".planning-profile");
+      profile.querySelector(".friend-confirm")?.remove();
+      socialAction.insertAdjacentHTML(
+        "afterend",
+        `<div class="friend-confirm">
+          <span>Unfriend this person?</span>
+          <button type="button" data-unfriend-cancel>Cancel</button>
+          <button type="button" data-unfriend-confirm>Unfriend</button>
+        </div>`
+      );
+      return;
+    }
     const isActive = socialAction.classList.toggle("active");
     const action = socialAction.dataset.socialAction;
     if (action === "follow") {
       socialAction.textContent = isActive ? "Follow request sent" : "Follow";
     } else {
+      socialAction.dataset.friendState = isActive ? "requested" : "none";
       socialAction.textContent = isActive ? "Friend request sent" : "Friend";
     }
+    return;
+  }
+
+  const unfriendCancel = event.target.closest("[data-unfriend-cancel]");
+  if (unfriendCancel) {
+    unfriendCancel.closest(".friend-confirm").remove();
+    return;
+  }
+
+  const unfriendConfirm = event.target.closest("[data-unfriend-confirm]");
+  if (unfriendConfirm) {
+    const confirmBox = unfriendConfirm.closest(".friend-confirm");
+    const friendButton = confirmBox.previousElementSibling;
+    friendButton.dataset.friendState = "none";
+    friendButton.classList.remove("active");
+    friendButton.textContent = "Friend";
+    confirmBox.remove();
     return;
   }
 
@@ -1400,7 +1731,7 @@ document.addEventListener("click", (event) => {
       listing.hangoutCount += 1;
     }
 
-    card.querySelector('[data-detail="plan"]').classList.toggle("active", listing.userPlanned);
+    card.querySelector('[data-detail="plan"]').classList.toggle("planned", listing.userPlanned);
     card.querySelector('[data-detail="plan"]').lastChild.textContent = String(listing.plannedCount);
     const hangoutButton = card.querySelector('[data-detail="hangout"]');
     if (hangoutButton) {
