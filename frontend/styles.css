@@ -517,7 +517,7 @@ select:focus {
   border-radius: 50%;
   background:
     linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1)),
-    url("assets/profile-farai.jpg") center/cover;
+    url("assets/profile-5.jpg") center/cover;
 }
 
 .profile-chip strong,
@@ -559,8 +559,36 @@ select:focus {
 }
 
 .subfilter-strip {
+  flex-direction: column;
+  align-items: stretch;
   margin-bottom: 0.75rem;
   padding-top: 0.25rem;
+}
+
+.subfilter-row {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.subfilter-row::-webkit-scrollbar {
+  display: none;
+}
+
+.subfilter-group {
+  display: grid;
+  gap: 6px;
+}
+
+.subfilter-group strong {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  padding-left: 2px;
+  text-transform: uppercase;
 }
 
 .category-strip::-webkit-scrollbar,

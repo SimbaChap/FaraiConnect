@@ -9,6 +9,27 @@ const subfilterStrip = document.querySelector(".subfilter-strip");
 const listingFeed = document.querySelector(".listing-feed");
 let activeHomeView = "home";
 let activeCategory = "houses";
+const profilePhotos = [
+  "assets/profile-1.jpg",
+  "assets/profile-2.jpg",
+  "assets/profile-3.jpg",
+  "assets/profile-4.jpg",
+  "assets/profile-5.jpg",
+];
+const greatZimbabwePhotos = [
+  "assets/great-zimbabwe-1.jpg",
+  "assets/great-zimbabwe-2.webp",
+  "assets/great-zimbabwe-3.jpg",
+  "assets/great-zimbabwe-4.jpg",
+  "assets/great-zimbabwe-5.jpg",
+];
+const victoriaFallsPhotos = [
+  "assets/victoria-falls-1.jpg",
+  "assets/victoria-falls-2.jpg",
+  "assets/victoria-falls-3.jpg",
+  "assets/victoria-falls-4.jpg",
+  "assets/victoria-falls-5.jpg",
+];
 const detailContent = {
   likes: ["Likes", "248 people liked this listing. Popular with renters looking around Avondale and Milton Park."],
   comments: ["Comments", "Comments will open here. For now: 36 people asked about viewing times, water, lease terms, and nearby schools."],
@@ -25,7 +46,7 @@ const propertyListings = [
     price: "$850/mo",
     poster: "Tariro M.",
     initials: "TM",
-    posterPhoto: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80",
+    posterPhoto: profilePhotos[0],
     agentRating: 4,
     agentLikes: 128,
     agentLiked: false,
@@ -70,7 +91,7 @@ const propertyListings = [
     price: "$180,000",
     poster: "Nyasha Realty",
     initials: "NR",
-    posterPhoto: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=300&q=80",
+    posterPhoto: profilePhotos[1],
     agentRating: 5,
     agentLikes: 342,
     agentLiked: false,
@@ -114,7 +135,7 @@ const propertyListings = [
     price: "$450/mo",
     poster: "Kuda Homes",
     initials: "KH",
-    posterPhoto: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+    posterPhoto: profilePhotos[2],
     agentRating: 3,
     agentLikes: 89,
     agentLiked: false,
@@ -158,7 +179,7 @@ const propertyListings = [
     price: "$125,000",
     poster: "Rudo Properties",
     initials: "RP",
-    posterPhoto: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=300&q=80",
+    posterPhoto: profilePhotos[3],
     agentRating: 4,
     agentLikes: 74,
     agentLiked: false,
@@ -202,7 +223,7 @@ const propertyListings = [
     price: "$600/mo",
     poster: "Farai Lettings",
     initials: "FL",
-    posterPhoto: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80",
+    posterPhoto: profilePhotos[4],
     agentRating: 3,
     agentLikes: 51,
     agentLiked: false,
@@ -243,14 +264,14 @@ const propertyListings = [
 
 const resortListings = [
   {
-    id: "nyanga-mountain-lodge",
+    id: "great-zimbabwe-heritage-resort",
     category: "resort",
-    type: "Resort stay",
-    title: "Nyanga mountain lodge escape",
-    price: "$95/night",
-    poster: "Eastern Highlands Retreats",
+    type: "Heritage resort",
+    title: "Great Zimbabwe heritage resort",
+    price: "$45/day",
+    poster: "Masvingo Heritage Stays",
     initials: "EH",
-    posterPhoto: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=300&q=80",
+    posterPhoto: profilePhotos[0],
     agentRating: 5,
     agentLikes: 214,
     agentLiked: false,
@@ -261,7 +282,7 @@ const resortListings = [
       { tone: "positive", author: "Tapiwa", text: "Staff were responsive before we travelled." },
       { tone: "negative", author: "Kundai", text: "Network can be weak in the evenings." },
     ],
-    description: "Scenic lodge near mountain trails, fireplaces, family rooms, and guided outdoor activities.",
+    description: "Heritage resort experience close to the Great Zimbabwe ruins, guided history walks, picnic spaces, and local culture.",
     likes: 521,
     liked: false,
     comments: 64,
@@ -275,8 +296,8 @@ const resortListings = [
     bathrooms: 8,
     dayTrip: true,
     accommodationProvided: true,
-    activities: ["Mountain hiking", "Bonfire nights", "Guided nature walks", "Family picnic spots"],
-    visitors: ["Rumbi visited last month", "Tapiwa visited with family", "Maita saved this for winter"],
+    activities: ["Guided ruins tour", "Heritage walks", "Picnic spaces", "Cultural photography"],
+    visitors: ["Rumbi visited Great Zimbabwe last month", "Tapiwa visited with family", "Maita saved this heritage trip"],
     plannedCount: 8,
     hangoutCount: 3,
     userPlanned: false,
@@ -285,7 +306,7 @@ const resortListings = [
     planDate: "",
     openToGroups: false,
     openToPartner: false,
-    plannedVisitors: ["Rumbi wants to go in June", "Tapiwa is planning a family weekend", "Maita is open to a winter trip"],
+    plannedVisitors: ["Rumbi wants to go in June", "Tapiwa is planning a family heritage weekend", "Maita is open to a winter trip"],
     planningPeople: [
       {
         name: "Rumbi",
@@ -294,9 +315,9 @@ const resortListings = [
         gender: "female",
         availability: "june",
         openFor: "partner",
-        note: "Wants to go in June for hiking and photos.",
+        note: "Wants to go in June for history, stone walls, and photos.",
         visitWhen: "Planning to visit in June",
-        photos: ["https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"],
+        photos: [profilePhotos[1]],
       },
       {
         name: "Tapiwa family group",
@@ -308,9 +329,9 @@ const resortListings = [
         note: "Planning a family weekend and open to another small group.",
         visitWhen: "Planning a family weekend",
         photos: [
-          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
-          "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=200&q=80",
-          "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80",
+          profilePhotos[2],
+          profilePhotos[3],
+          profilePhotos[4],
         ],
       },
       {
@@ -322,22 +343,18 @@ const resortListings = [
         openFor: "partner",
         note: "Open to a winter trip partner.",
         visitWhen: "Planning a winter trip",
-        photos: ["https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80"],
+        photos: [profilePhotos[4]],
       },
     ],
     postedAt: "Posted 1 day ago",
     views: 3480,
-    historyNotes: ["Booking contact verified", "Location checked on map", "No duplicate resort post found"],
+    historyNotes: ["Heritage location checked", "Tour contact verified", "No duplicate resort post found"],
     commentsList: [
-      { tone: "positive", author: "Rumbi", text: "The views look perfect for a weekend away." },
-      { tone: "positive", author: "Tanaka", text: "Great for families who want quiet space." },
-      { tone: "negative", author: "Noma", text: "Please confirm if breakfast is included." },
+      { tone: "positive", author: "Rumbi", text: "The ruins look perfect for a heritage day trip." },
+      { tone: "positive", author: "Tanaka", text: "Great for families who want history and photos." },
+      { tone: "negative", author: "Noma", text: "Please confirm guide prices before visiting." },
     ],
-    images: [
-      "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80",
-    ],
+    images: greatZimbabwePhotos,
   },
   {
     id: "kariba-lakeside-resort",
@@ -347,7 +364,7 @@ const resortListings = [
     price: "$130/night",
     poster: "Zambezi Holiday Stays",
     initials: "ZH",
-    posterPhoto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+    posterPhoto: profilePhotos[1],
     agentRating: 4,
     agentLikes: 173,
     agentLiked: false,
@@ -393,7 +410,7 @@ const resortListings = [
         openFor: "partner",
         note: "Wants a weekend lake trip.",
         visitWhen: "Planning a weekend visit",
-        photos: ["https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=200&q=80"],
+        photos: [profilePhotos[0]],
       },
       {
         name: "Vimbai group",
@@ -405,8 +422,8 @@ const resortListings = [
         note: "Open to group travel and boat activities.",
         visitWhen: "Planning around school holidays",
         photos: [
-          "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=200&q=80",
-          "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80",
+          profilePhotos[2],
+          profilePhotos[3],
         ],
       },
       {
@@ -418,7 +435,7 @@ const resortListings = [
         openFor: "partner",
         note: "Wants to join a boat cruise.",
         visitWhen: "Planning a boat cruise weekend",
-        photos: ["https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80"],
+        photos: [profilePhotos[1]],
       },
     ],
     postedAt: "Posted 4 days ago",
@@ -443,7 +460,7 @@ const resortListings = [
     price: "$160/night",
     poster: "Falls Travel Homes",
     initials: "FT",
-    posterPhoto: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80",
+    posterPhoto: profilePhotos[2],
     agentRating: 4,
     agentLikes: 256,
     agentLiked: false,
@@ -489,7 +506,7 @@ const resortListings = [
         openFor: "partner",
         note: "Wants to visit soon and compare activity prices.",
         visitWhen: "Planning to visit soon",
-        photos: ["https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?auto=format&fit=crop&w=200&q=80"],
+        photos: [profilePhotos[3]],
       },
       {
         name: "Brian",
@@ -500,7 +517,7 @@ const resortListings = [
         openFor: "partner",
         note: "Planning for August.",
         visitWhen: "Planning for August",
-        photos: ["https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80"],
+        photos: [profilePhotos[0]],
       },
       {
         name: "Tariro friends",
@@ -512,9 +529,9 @@ const resortListings = [
         note: "Open to another trip with a small travel group.",
         visitWhen: "Planning another trip soon",
         photos: [
-          "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
-          "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=80",
-          "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80",
+          profilePhotos[1],
+          profilePhotos[4],
+          profilePhotos[2],
         ],
       },
     ],
@@ -527,9 +544,7 @@ const resortListings = [
       { tone: "negative", author: "Ashley", text: "Please confirm airport pickup." },
     ],
     images: [
-      "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80",
+      ...victoriaFallsPhotos,
     ],
   },
 ];
@@ -541,7 +556,7 @@ const listingsByCategory = {
 
 const categoryFilters = {
   houses: ["Houses to rent", "Houses to buy", "Verified houses", "Newest", "Near me"],
-  resorts: ["Lodges", "Holiday homes", "Visited by friends", "Family friendly", "Near me"],
+  resorts: [],
   stands: ["Residential stands", "Commercial stands", "Serviced stands", "Verified stands", "Near me"],
   farms: ["Small farms", "Large farms", "Plots", "For sale", "For lease"],
   churches: ["Pentecostal", "Apostolic", "Catholic", "Near me", "Most visited"],
@@ -549,6 +564,16 @@ const categoryFilters = {
   malls: ["Shopping centres", "Food courts", "Popular", "Near me", "Visited"],
   agents: ["Verified agents", "Top rated", "Rentals", "Sales", "Land specialists"],
 };
+const resortFilterGroups = [
+  {
+    label: "Type of resort",
+    filters: ["Weekend getaway", "Private", "Safari", "Game drive", "Restaurant", "Crowd pullers", "Family friendly", "Day trips", "Stay provided", "Near me"],
+  },
+  {
+    label: "Activities offered",
+    filters: ["Hiking", "Lion interaction", "Game drive", "Lion viewing", "Elephant viewing", "Braai", "Canoeing", "Guided tours", "Waterfalls", "Heritage walks", "Boat cruise"],
+  },
+];
 
 function showPanel(panelName) {
   forms.forEach((form) => {
@@ -557,6 +582,21 @@ function showPanel(panelName) {
 }
 
 function renderSubfilters(category) {
+  if (category === "resorts") {
+    subfilterStrip.innerHTML = resortFilterGroups
+      .map(
+        (group) => `
+          <div class="subfilter-group">
+            <strong>${group.label}</strong>
+            <div class="subfilter-row">
+              ${group.filters.map((filter) => `<button class="subfilter-pill" type="button" data-resort-filter>${filter}</button>`).join("")}
+            </div>
+          </div>`
+      )
+      .join("");
+    return;
+  }
+
   const filters = categoryFilters[category] || [];
   subfilterStrip.innerHTML = filters
     .map((filter, index) => `<button class="subfilter-pill${index === 0 ? " active" : ""}" type="button">${filter}</button>`)
@@ -1351,6 +1391,10 @@ navItems.forEach((button) => {
 subfilterStrip.addEventListener("click", (event) => {
   const button = event.target.closest(".subfilter-pill");
   if (!button) return;
+  if (activeCategory === "resorts") {
+    button.classList.toggle("active");
+    return;
+  }
   subfilterStrip.querySelectorAll(".subfilter-pill").forEach((filterButton) => filterButton.classList.remove("active"));
   button.classList.add("active");
 });
