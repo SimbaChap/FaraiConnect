@@ -9,8 +9,10 @@ const subfilterStrip = document.querySelector(".subfilter-strip");
 const listingFeed = document.querySelector(".listing-feed");
 const quickGrid = document.querySelector(".quick-grid");
 const quickInsightPanel = document.querySelector(".quick-insight-panel");
+const organisedTripOverlay = document.querySelector("#organised-trip-overlay");
+const heroCategoryTitle = document.querySelector("#hero-category-title");
 let activeHomeView = "home";
-let activeCategory = "houses";
+let activeCategory = "resorts";
 let activeQuickCard = "";
 let activeDemandPlace = "";
 const profilePhotos = [
@@ -945,52 +947,109 @@ const organisedTrips = [
     where: "Mazowe Dam",
     organiser: "Rumbi Trips",
     cost: "$18 pp",
-    when: "30 May",
+    when: "30 May 2024",
+    startDate: "2024-05-30",
+    endDate: "2024-05-30",
+    time: "08:00 AM",
     going: 32,
+    note: "Join us for a relaxing braai by the dam. Good food, great people and beautiful views.",
+    tags: ["Braai", "Relaxation", "Nature"],
+    rating: 4.8,
+    previousTrips: 9,
+    likes: 84,
+    liked: false,
     image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=600&q=80",
     target: "mazowe-dam-day-resort",
+    joinRequested: false,
   },
   {
     title: "Domboshava sunrise hike",
     where: "Domboshava rocks",
     organiser: "Harare Hikers",
     cost: "$8 pp",
-    when: "1 Jun",
+    when: "31 May - 01 Jun 2024",
+    startDate: "2024-05-31",
+    endDate: "2024-06-01",
+    time: "06:00 PM",
     going: 27,
+    note: "Overnight hike to catch the most amazing sunrise over the rocks.",
+    tags: ["Hiking", "Sunrise", "Adventure"],
+    rating: 4.6,
+    previousTrips: 14,
+    likes: 71,
+    liked: false,
     image: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=600&q=80",
     target: "domboshava-sunset-rocks",
+    joinRequested: false,
   },
   {
     title: "Lion park family day",
     where: "Lion and Cheetah Park",
     organiser: "Moyo Family Circle",
     cost: "$25 pp",
-    when: "7 Jun",
+    when: "07 Jun 2024",
+    startDate: "2024-06-07",
+    endDate: "2024-06-07",
+    time: "09:00 AM",
     going: 21,
+    note: "A fun family day out to see lions, cheetahs and more.",
+    tags: ["Wildlife", "Family", "Photos"],
+    rating: 4.7,
+    previousTrips: 6,
+    likes: 52,
+    liked: false,
     image: "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=600&q=80",
     target: "lion-and-cheetah-park",
+    joinRequested: false,
   },
   {
     title: "Zambezi sunset cruise group",
     where: "Victoria Falls",
     organiser: "Falls Weekend Crew",
     cost: "$50 pp",
-    when: "14 Jun",
+    when: "14 Jun 2024",
+    startDate: "2024-06-14",
+    endDate: "2024-06-14",
+    time: "04:30 PM",
     going: 18,
+    note: "Sunset cruise group for friends, couples and solo travellers open to meeting people.",
+    tags: ["Cruising", "Waterfalls", "Social"],
+    rating: 4.9,
+    previousTrips: 11,
+    likes: 66,
+    liked: false,
     image: victoriaFallsPhotos[1],
     target: "zambezi-river-cruise",
+    joinRequested: false,
   },
   {
     title: "Great Zimbabwe heritage walk",
     where: "Great Zimbabwe",
     organiser: "Masvingo Culture Club",
     cost: "$12 pp",
-    when: "28 Jun",
+    when: "28 Jun 2024",
+    startDate: "2024-06-28",
+    endDate: "2024-06-28",
+    time: "10:00 AM",
     going: 12,
+    note: "Guided walk for heritage lovers, with storytelling and group photos.",
+    tags: ["Heritage", "Guided tour", "Culture"],
+    rating: 4.5,
+    previousTrips: 5,
+    likes: 39,
+    liked: false,
     image: greatZimbabwePhotos[0],
     target: "ancient-city-guided-walk",
+    joinRequested: false,
   },
 ];
+
+const organisedTripCriteria = {
+  from: "2024-05-30",
+  to: "2024-06-30",
+  filters: [],
+  range: "",
+};
 
 const demandReelTargets = {
   "Mazowe Dam day resort": "mazowe-dam-day-resort",
@@ -1027,9 +1086,126 @@ const resortFilterGroups = [
   },
   {
     label: "Activities offered",
-    filters: ["Hiking", "Lion interaction", "Game drive", "Lion viewing", "Elephant viewing", "Braai", "Canoeing", "Guided tours", "Waterfalls", "Heritage walks", "Boat cruise"],
+    filters: [
+      "Archery",
+      "ATV rides",
+      "Bird watching",
+      "Board games",
+      "Boat cruises",
+      "Bonfire nights",
+      "Braai / BBQ areas",
+      "Camping",
+      "Canoeing",
+      "Cultural dances",
+      "Elephant viewing",
+      "Fishing",
+      "Game drives",
+      "Game rooms",
+      "Gym / fitness center",
+      "Guided tours",
+      "Heritage walks",
+      "Hiking",
+      "Horse riding",
+      "Hot tubs / jacuzzis",
+      "Jet skiing",
+      "Kids play areas",
+      "Karaoke",
+      "Kayaking",
+      "Lion interaction",
+      "Lion viewing",
+      "Live music",
+      "Massage therapy",
+      "Meditation gardens",
+      "Mountain biking",
+      "Nature walks",
+      "Outdoor movie nights",
+      "Paddle boarding",
+      "Quad biking",
+      "Rock climbing",
+      "Sailing",
+      "Sauna & steam rooms",
+      "Scuba diving",
+      "Snorkeling",
+      "Spa treatments",
+      "Surfing",
+      "Swimming pools",
+      "Tubing",
+      "Water slides",
+      "Waterfalls",
+      "White-water rafting",
+      "Wildlife viewing",
+      "Yoga sessions",
+      "Zip lining",
+    ],
   },
 ];
+
+const filterIcons = {
+  "Type of resort": "✣",
+  "Activities offered": "✤",
+  "All resorts": "✓",
+  "Weekend getaway": "◌",
+  Private: "◇",
+  Safari: "♘",
+  "Game drive": "🚙",
+  "Game drives": "🚙",
+  Restaurant: "◫",
+  "Crowd pullers": "◉",
+  "Family friendly": "♡",
+  "Day trips": "☼",
+  "Stay provided": "▰",
+  "Near me": "⌖",
+  "Bird watching": "🦜",
+  "Nature walks": "🥾",
+  "Wildlife viewing": "🦓",
+  Camping: "⛺",
+  "Gym / fitness center": "🏋",
+  "Kids play areas": "🛝",
+  "Bonfire nights": "🔥",
+  "Outdoor movie nights": "🎬",
+  Karaoke: "🎤",
+  "Live music": "🎵",
+  "Cultural dances": "🥁",
+  "Game rooms": "🎮",
+  "Board games": "🎲",
+  "Spa treatments": "♨",
+  "Sauna & steam rooms": "♨",
+  "Hot tubs / jacuzzis": "♨",
+  "Yoga sessions": "☯",
+  "Massage therapy": "✋",
+  "Meditation gardens": "🌿",
+  "Swimming pools": "🏊",
+  "Water slides": "💦",
+  Snorkeling: "🤿",
+  "Scuba diving": "🤿",
+  "Paddle boarding": "🏄",
+  Sailing: "⛵",
+  Tubing: "◎",
+  Surfing: "🏄",
+  "Braai / BBQ areas": "🔥",
+  Hiking: "🥾",
+  "Lion interaction": "🦁",
+  "Lion viewing": "🦁",
+  "Elephant viewing": "🐘",
+  Braai: "🔥",
+  Canoeing: "🛶",
+  Kayaking: "🛶",
+  "Horse riding": "🐎",
+  "Zip lining": "➰",
+  "Quad biking": "🏍",
+  "Mountain biking": "🚵",
+  Fishing: "🎣",
+  Archery: "🏹",
+  "Rock climbing": "🧗",
+  "ATV rides": "🏍",
+  "Guided tours": "⚑",
+  Waterfalls: "💧",
+  "Heritage walks": "▥",
+  "Boat cruise": "⚓",
+  "Boat cruises": "⚓",
+  "Jet skiing": "🌊",
+  "White-water rafting": "🚣",
+};
 
 function showPanel(panelName) {
   forms.forEach((form) => {
@@ -1043,9 +1219,11 @@ function renderSubfilters(category) {
       .map(
         (group, groupIndex) => `
           <div class="subfilter-group">
-            <strong>${group.label}</strong>
+            <div class="filter-heading">
+              <strong><span>${filterIcons[group.label] || ""}</span>${group.label}</strong>
+            </div>
             <div class="subfilter-row">
-              ${group.filters.map((filter, filterIndex) => `<button class="subfilter-pill${groupIndex === 0 && filterIndex === 0 ? " active" : ""}" type="button" data-resort-filter>${filter}</button>`).join("")}
+              ${group.filters.map((filter, filterIndex) => `<button class="subfilter-pill${groupIndex === 1 ? " activity-filter" : ""}${groupIndex === 0 && filterIndex === 0 ? " active" : ""}" type="button" data-resort-filter><span>${filterIcons[filter] || ""}</span>${filter}</button>`).join("")}
             </div>
           </div>`
       )
@@ -1062,13 +1240,23 @@ function renderSubfilters(category) {
     </div>`;
 }
 
+function updateHeroCategory(category) {
+  if (!heroCategoryTitle) return;
+  const label = {
+    houses: "Houses",
+    resorts: "Resorts",
+    stands: "Stands",
+    farms: "Farms",
+    churches: "Churches",
+    schools: "Schools",
+    malls: "Malls",
+    agents: "Agents",
+  }[category];
+  heroCategoryTitle.textContent = label || category;
+}
+
 function renderQuickInsightPanel() {
   if (!quickInsightPanel || !activeQuickCard) return;
-  if (activeQuickCard === "organised") {
-    quickInsightPanel.hidden = false;
-    quickInsightPanel.innerHTML = renderOrganisedTripsPanel();
-    return;
-  }
   if (activeQuickCard !== "to-go") return;
   const isResorts = activeCategory === "resorts";
   quickInsightPanel.hidden = false;
@@ -1076,34 +1264,159 @@ function renderQuickInsightPanel() {
 }
 
 function renderOrganisedTripsPanel() {
-  const sortedTrips = [...organisedTrips].sort((a, b) => b.going - a.going);
-  const maxGoing = Math.max(...sortedTrips.map((trip) => trip.going));
+  const sortedTrips = filterOrganisedTrips().sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+  const tripFilters = getOrganisedTripFilterOptions();
   return `
-    <div class="quick-insight-head">
-      <div>
-        <strong>Organised trips</strong>
-        <span>Popular trips people created for braai, hiking, cruising, and heritage walks.</span>
+    <div class="organised-panel">
+      <div class="organised-head">
+        <div>
+          <strong>Organised Trips</strong>
+          <span>Find trips happening on dates that work for you.</span>
+        </div>
+        <div class="organised-art" aria-hidden="true">
+          <span>Adventure awaits</span>
+        </div>
+        <button class="quick-insight-close" type="button" data-quick-close aria-label="Close organised trips">x</button>
       </div>
-      <button class="quick-insight-close" type="button" data-quick-close aria-label="Close organised trips">x</button>
+      <div class="organised-controls" aria-label="Organised trip filters">
+        <label>
+          <span>From</span>
+          <input type="date" data-organised-from value="${organisedTripCriteria.from}" />
+        </label>
+        <label>
+          <span>To</span>
+          <input type="date" data-organised-to value="${organisedTripCriteria.to}" />
+        </label>
+        <div class="organised-quick">
+          <button class="${organisedTripCriteria.range === "this-weekend" ? "active" : ""}" type="button" data-organised-range="this-weekend">This Weekend</button>
+          <button class="${organisedTripCriteria.range === "next-weekend" ? "active" : ""}" type="button" data-organised-range="next-weekend">Next Weekend</button>
+          <button class="${organisedTripCriteria.range === "this-month" ? "active" : ""}" type="button" data-organised-range="this-month">This Month</button>
+          <button class="${organisedTripCriteria.range === "next-month" ? "active" : ""}" type="button" data-organised-range="next-month">Next Month</button>
+        </div>
+        <div class="organised-chips" aria-label="Trip types">
+          ${tripFilters
+            .map((filter) => `<button class="${organisedTripCriteria.filters.includes(filter) ? "active" : ""}" type="button" data-organised-filter="${filter}">${filter}</button>`)
+            .join("")}
+        </div>
+        <button class="organised-apply" type="button">Apply</button>
+      </div>
+      <div class="organised-layout">
+        <div class="trip-list" aria-label="Organised trips by date">
+          ${
+            sortedTrips.length
+              ? sortedTrips
+            .map(
+              (trip, index) => `
+                <section class="trip-day-group">
+                  <div class="trip-date-line">
+                    <span>${index === 1 ? "Sat, 31 May - Sun, 01 Jun 2024" : `Fri, ${trip.when}`}</span>
+                    <b>1 trip</b>
+                  </div>
+                  <article class="trip-item trip-reel-item" data-trip-title="${trip.title}">
+                    <div class="trip-reel-gallery" aria-label="${trip.title} photos">
+                      ${getOrganisedTripImages(trip)
+                        .map((image) => `<span class="trip-reel-photo" style="background-image: url('${image}')"></span>`)
+                        .join("")}
+                    </div>
+                    <div class="trip-reel-shade"></div>
+                    <div class="trip-reel-dots" aria-hidden="true">
+                      ${getOrganisedTripImages(trip)
+                        .map((_image, dotIndex) => `<span class="${dotIndex === 0 ? "active" : ""}"></span>`)
+                        .join("")}
+                    </div>
+                    <div class="trip-reel-content">
+                      <div class="trip-main">
+                        <strong>${trip.title}</strong>
+                        <span>${trip.where} - ${trip.organiser}</span>
+                        <p>${trip.note}</p>
+                        <div class="trip-tags">
+                          ${trip.tags.map((tag) => `<small>${tag}</small>`).join("")}
+                        </div>
+                      </div>
+                      <div class="trip-meta">
+                        <span>${trip.when}</span>
+                        <span>${trip.time}</span>
+                        <span>${trip.going} going</span>
+                        <strong>${trip.cost.replace("pp", "/ person")}</strong>
+                        <div class="trip-organiser-proof">
+                          <b>${trip.rating.toFixed(1)} rating</b>
+                          <b>${trip.previousTrips} previous trips</b>
+                        </div>
+                        <div class="trip-actions">
+                          <button type="button" data-trip-join="${trip.title}">${trip.joinRequested ? "Request sent" : "Ask to join group"}</button>
+                          <button class="${trip.liked ? "active" : ""}" type="button" data-trip-like="${trip.title}">${iconHeart()}<span>${trip.likes}</span></button>
+                          <button type="button" data-demand-target="${trip.target}">View details</button>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </section>`
+            )
+            .join("")
+              : `<div class="organised-empty">No organised trips match those filters yet.</div>`
+          }
+        </div>
+        <aside class="organised-side" aria-label="Trip calendar">
+          <strong>May - Jun 2024</strong>
+          <div class="mini-calendar">
+            ${["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((day) => `<span>${day}</span>`).join("")}
+            ${Array.from({ length: 35 }, (_, index) => {
+              const day = index + 1;
+              const selected = [30, 31].includes(day);
+              const eventDay = [7, 14, 28].includes(day);
+              return `<b class="${selected ? "selected" : eventDay ? "event" : ""}">${day <= 31 ? day : day - 31}</b>`;
+            }).join("")}
+          </div>
+          <div class="organised-tip">
+            <strong>Pro tip</strong>
+            <span>Weekends get booked fast. Plan early for the best experiences.</span>
+          </div>
+        </aside>
+              </div>
     </div>
-    <div class="trip-list" aria-label="Organised trips by popularity">
-      ${sortedTrips
-        .map(
-          (trip) => `
-            <article class="trip-item" data-demand-target="${trip.target}" role="button" tabindex="0" aria-label="Open trip reel for ${trip.title}">
-              <img src="${trip.image}" alt="" />
-              <div>
-                <strong>${trip.title}</strong>
-                <span>${trip.where} - ${trip.when} - ${trip.cost}</span>
-                <small>By ${trip.organiser}</small>
-              </div>
-              <div class="trip-popularity">
-                <b>${trip.going}</b>
-                <span style="height: ${(trip.going / maxGoing) * 100}%"></span>
-              </div>
-            </article>`
-        )
-        .join("")}
+  `;
+}
+
+function getOrganisedTripImages(trip) {
+  const listing = findListingById(trip.target);
+  return listing?.images?.length ? listing.images.slice(0, 4) : [trip.image];
+}
+
+function getOrganisedTripFilterOptions() {
+  return [...resortFilterGroups[1].filters].sort((a, b) => a.localeCompare(b));
+}
+
+function filterOrganisedTrips() {
+  const fromDate = new Date(organisedTripCriteria.from);
+  const toDate = new Date(organisedTripCriteria.to);
+  return organisedTrips.filter((trip) => {
+    const tripStart = new Date(trip.startDate);
+    const tripEnd = new Date(trip.endDate || trip.startDate);
+    const inDateRange = tripEnd >= fromDate && tripStart <= toDate;
+    if (!inDateRange) return false;
+    if (organisedTripCriteria.filters.length === 0) return true;
+    const tripText = normalizeFilterText([trip.title, trip.where, trip.organiser, trip.note, ...(trip.tags || [])].join(" "));
+    return organisedTripCriteria.filters.some((filter) => tripText.includes(normalizeFilterText(filter)));
+  });
+}
+
+function openOrganisedTripsOverlay() {
+  if (!organisedTripOverlay) return;
+  organisedTripOverlay.innerHTML = renderOrganisedTripsOverlay();
+  organisedTripOverlay.hidden = false;
+}
+
+function renderOrganisedTripsOverlay() {
+  return `
+    <div class="organised-trip-backdrop">
+      <div class="organised-overlay-top">
+        <div>
+          <strong>Organised Trips</strong>
+          <span>Find groups, dates and trips you can join.</span>
+        </div>
+        <button type="button" data-organised-close aria-label="Close organised trips">x</button>
+      </div>
+      ${renderOrganisedTripsPanel()}
     </div>`;
 }
 
@@ -1407,6 +1720,7 @@ function findListingById(listingId) {
 function setHomeCategory(category) {
   activeHomeView = "home";
   activeCategory = category;
+  updateHeroCategory(category);
   navItems.forEach((navItem) => navItem.classList.toggle("active", navItem.dataset.homeView === "home"));
   categoryButtons.forEach((categoryButton) => categoryButton.classList.toggle("active", categoryButton.dataset.category === category));
   renderSubfilters(category);
@@ -2062,8 +2376,10 @@ function enterHomeScreen() {
   homeScreen.hidden = false;
   document.title = "FaraiConnect | Home";
   activeHomeView = "home";
-  activeCategory = "houses";
-  renderSubfilters("houses");
+  activeCategory = "resorts";
+  updateHeroCategory("resorts");
+  categoryButtons.forEach((categoryButton) => categoryButton.classList.toggle("active", categoryButton.dataset.category === "resorts"));
+  renderSubfilters("resorts");
   renderListings("home");
 }
 
@@ -2075,6 +2391,7 @@ categoryButtons.forEach((button) => {
   button.addEventListener("click", () => {
     activeHomeView = "home";
     activeCategory = button.dataset.category;
+    updateHeroCategory(button.dataset.category);
     navItems.forEach((navItem) => navItem.classList.toggle("active", navItem.dataset.homeView === "home"));
     categoryButtons.forEach((categoryButton) => categoryButton.classList.remove("active"));
     button.classList.add("active");
@@ -2088,7 +2405,14 @@ quickGrid?.addEventListener("click", (event) => {
   const quickCard = event.target.closest("[data-quick-card]");
   if (!quickCard) return;
   const cardType = quickCard.dataset.quickCard;
-  if (cardType !== "to-go" && cardType !== "organised") {
+  if (cardType === "organised") {
+    activeQuickCard = "";
+    quickInsightPanel.hidden = true;
+    quickGrid.querySelectorAll("[data-quick-card]").forEach((card) => card.classList.remove("active"));
+    openOrganisedTripsOverlay();
+    return;
+  }
+  if (cardType !== "to-go") {
     activeQuickCard = "";
     quickInsightPanel.hidden = true;
     quickGrid.querySelectorAll("[data-quick-card]").forEach((card) => card.classList.remove("active"));
@@ -2148,6 +2472,12 @@ subfilterStrip.addEventListener("click", (event) => {
 });
 
 document.addEventListener("click", (event) => {
+  const organisedClose = event.target.closest("[data-organised-close]");
+  if (organisedClose) {
+    organisedTripOverlay.hidden = true;
+    return;
+  }
+
   const quickClose = event.target.closest("[data-quick-close]");
   if (quickClose) {
     activeQuickCard = "";
@@ -2156,8 +2486,82 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  const tripJoinButton = event.target.closest("[data-trip-join]");
+  if (tripJoinButton) {
+    const trip = organisedTrips.find((item) => item.title === tripJoinButton.dataset.tripJoin);
+    if (trip) {
+      trip.joinRequested = !trip.joinRequested;
+      if (tripJoinButton.closest(".organised-trip-overlay")) {
+        organisedTripOverlay.innerHTML = renderOrganisedTripsOverlay();
+      } else {
+        renderQuickInsightPanel();
+      }
+    }
+    return;
+  }
+
+  const tripLikeButton = event.target.closest("[data-trip-like]");
+  if (tripLikeButton) {
+    const trip = organisedTrips.find((item) => item.title === tripLikeButton.dataset.tripLike);
+    if (trip) {
+      trip.liked = !trip.liked;
+      trip.likes += trip.liked ? 1 : -1;
+      if (tripLikeButton.closest(".organised-trip-overlay")) {
+        organisedTripOverlay.innerHTML = renderOrganisedTripsOverlay();
+      } else {
+        renderQuickInsightPanel();
+      }
+    }
+    return;
+  }
+
+  const organisedRange = event.target.closest("[data-organised-range]");
+  if (organisedRange) {
+    const controls = organisedRange.closest(".organised-controls");
+    const wasActive = organisedRange.classList.contains("active");
+    controls.querySelectorAll("[data-organised-range]").forEach((button) => button.classList.remove("active"));
+    if (wasActive) {
+      organisedTripCriteria.range = "";
+      return;
+    }
+    const ranges = {
+      "this-weekend": ["2024-05-30", "2024-06-02"],
+      "next-weekend": ["2024-06-07", "2024-06-09"],
+      "this-month": ["2024-05-30", "2024-06-30"],
+      "next-month": ["2024-07-01", "2024-07-31"],
+    };
+    const [from, to] = ranges[organisedRange.dataset.organisedRange] || ranges["this-month"];
+    controls.querySelector("[data-organised-from]").value = from;
+    controls.querySelector("[data-organised-to]").value = to;
+    organisedRange.classList.add("active");
+    organisedTripCriteria.range = organisedRange.dataset.organisedRange;
+    return;
+  }
+
+  const organisedFilter = event.target.closest("[data-organised-filter]");
+  if (organisedFilter) {
+    organisedFilter.classList.toggle("active");
+    return;
+  }
+
+  const organisedApply = event.target.closest(".organised-apply");
+  if (organisedApply) {
+    const controls = organisedApply.closest(".organised-controls");
+    organisedTripCriteria.from = controls.querySelector("[data-organised-from]").value || "2024-05-30";
+    organisedTripCriteria.to = controls.querySelector("[data-organised-to]").value || "2024-06-30";
+    organisedTripCriteria.range = controls.querySelector("[data-organised-range].active")?.dataset.organisedRange || "";
+    organisedTripCriteria.filters = Array.from(controls.querySelectorAll('[data-organised-filter].active'))
+      .map((button) => button.dataset.organisedFilter)
+      .filter(Boolean);
+    organisedTripOverlay.innerHTML = renderOrganisedTripsOverlay();
+    return;
+  }
+
   const demandTarget = event.target.closest("[data-demand-target]");
   if (demandTarget) {
+    if (demandTarget.closest(".organised-trip-overlay")) {
+      organisedTripOverlay.hidden = true;
+    }
     openListingReel(demandTarget.dataset.demandTarget);
     return;
   }
