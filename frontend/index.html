@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FaraiConnect | Login</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=20260621-softer-shorter-reels" />
   </head>
   <body>
     <main class="page-shell" id="auth-screen">
@@ -61,12 +61,12 @@
               <p>Sign in to your FaraiConnect account.</p>
             </div>
 
-            <label for="login-identifier">Username, email, or phone</label>
+            <label for="login-identifier">Email address</label>
             <div class="input-icon-wrap">
               <svg aria-hidden="true" viewBox="0 0 24 24">
                 <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z" />
               </svg>
-              <input id="login-identifier" name="identifier" type="text" autocomplete="username" placeholder="farai, farai@email.com, or +263..." required />
+              <input id="login-identifier" name="identifier" type="email" autocomplete="email" placeholder="farai@email.com" required />
             </div>
 
             <label for="login-password">Password</label>
@@ -75,6 +75,9 @@
                 <path d="M17 9V7a5 5 0 0 0-10 0v2H5v11h14V9h-2ZM9 7a3 3 0 0 1 6 0v2H9V7Zm4 8.7V18h-2v-2.3a2 2 0 1 1 2 0Z" />
               </svg>
               <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required />
+              <button class="password-toggle" type="button" data-toggle-password="login-password" aria-label="Show password">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5c5.2 0 8.7 4.4 9.8 6.1.3.5.3 1.1 0 1.6C20.7 14.4 17.2 19 12 19s-8.7-4.6-9.8-6.3a1.5 1.5 0 0 1 0-1.6C3.3 9.4 6.8 5 12 5Zm0 2C7.9 7 5 10.4 4 11.9 5 13.5 7.9 17 12 17s7-3.5 8-5.1C19 10.4 16.1 7 12 7Zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6Z" /></svg>
+              </button>
             </div>
 
             <div class="form-row">
@@ -82,7 +85,7 @@
                 <input type="checkbox" name="remember" />
                 Remember me
               </label>
-              <a href="#" class="text-link">Forgot password?</a>
+              <button class="text-link text-button" type="button" id="forgot-password-link">Forgot password?</button>
             </div>
 
             <button class="primary-button" type="submit">Login</button>
@@ -106,41 +109,159 @@
             <p class="form-message" id="login-message" aria-live="polite"></p>
           </form>
 
+          <form id="forgot-password-form" class="auth-form" data-panel="forgot-password" novalidate>
+            <div class="form-header">
+              <h2>Reset password</h2>
+              <p>Enter your account email and we will send you a secure link to change your password.</p>
+            </div>
+
+            <label for="reset-email">Email address</label>
+            <div class="input-icon-wrap">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z" />
+              </svg>
+              <input id="reset-email" name="email" type="email" autocomplete="email" placeholder="your@email.com" required />
+            </div>
+
+            <button class="primary-button" type="submit">Send reset email</button>
+            <div class="switch-row">
+              Remembered it? <button type="button" data-show-form="login">Back to login</button>
+            </div>
+            <p class="form-message" id="forgot-message" aria-live="polite"></p>
+          </form>
+
+          <form id="new-password-form" class="auth-form" data-panel="new-password" novalidate>
+            <div class="form-header">
+              <h2>Change password</h2>
+              <p>Your email has been verified. Create a new password for FaraiConnect.</p>
+            </div>
+
+            <label for="new-password">New password</label>
+            <div class="input-icon-wrap">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M17 9V7a5 5 0 0 0-10 0v2H5v11h14V9h-2ZM9 7a3 3 0 0 1 6 0v2H9V7Zm4 8.7V18h-2v-2.3a2 2 0 1 1 2 0Z" />
+              </svg>
+              <input id="new-password" name="password" type="password" autocomplete="new-password" placeholder="Enter new password" minlength="6" required />
+              <button class="password-toggle" type="button" data-toggle-password="new-password" aria-label="Show password">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5c5.2 0 8.7 4.4 9.8 6.1.3.5.3 1.1 0 1.6C20.7 14.4 17.2 19 12 19s-8.7-4.6-9.8-6.3a1.5 1.5 0 0 1 0-1.6C3.3 9.4 6.8 5 12 5Zm0 2C7.9 7 5 10.4 4 11.9 5 13.5 7.9 17 12 17s7-3.5 8-5.1C19 10.4 16.1 7 12 7Zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6Z" /></svg>
+              </button>
+            </div>
+
+            <label for="new-password-confirm">Confirm new password</label>
+            <div class="input-icon-wrap">
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M17 9V7a5 5 0 0 0-10 0v2H5v11h14V9h-2ZM9 7a3 3 0 0 1 6 0v2H9V7Zm4 8.7V18h-2v-2.3a2 2 0 1 1 2 0Z" />
+              </svg>
+              <input id="new-password-confirm" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Repeat new password" minlength="6" required />
+              <button class="password-toggle" type="button" data-toggle-password="new-password-confirm" aria-label="Show password">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5c5.2 0 8.7 4.4 9.8 6.1.3.5.3 1.1 0 1.6C20.7 14.4 17.2 19 12 19s-8.7-4.6-9.8-6.3a1.5 1.5 0 0 1 0-1.6C3.3 9.4 6.8 5 12 5Zm0 2C7.9 7 5 10.4 4 11.9 5 13.5 7.9 17 12 17s7-3.5 8-5.1C19 10.4 16.1 7 12 7Zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6Z" /></svg>
+              </button>
+            </div>
+
+            <button class="primary-button" type="submit">Change password</button>
+            <p class="form-message" id="new-password-message" aria-live="polite"></p>
+          </form>
+
           <form id="register-form" class="auth-form" data-panel="register">
             <div class="form-header">
               <h2>Create account</h2>
-              <p>Start your FaraiConnect profile.</p>
+              <p id="register-step-copy">Start your FaraiConnect profile.</p>
             </div>
 
-            <div class="two-column">
-              <div>
-                <label for="first-name">First name</label>
-                <input id="first-name" name="firstName" type="text" autocomplete="given-name" placeholder="Farai" required />
-              </div>
-              <div>
-                <label for="last-name">Last name</label>
-                <input id="last-name" name="lastName" type="text" autocomplete="family-name" placeholder="Moyo" required />
-              </div>
+            <div class="register-progress" aria-label="Registration progress">
+              <span class="active"></span>
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
+            <p class="required-note">Required: first name, last name, username, email, password, birthday, and gender.</p>
 
-            <label for="username">Username</label>
-            <input id="username" name="username" type="text" autocomplete="username" placeholder="farai_moyo" required />
+            <section class="register-step active" data-register-step="0">
+              <div class="two-column">
+                <div>
+                  <label for="first-name">First name</label>
+                  <input id="first-name" name="firstName" type="text" autocomplete="given-name" placeholder="Farai" required />
+                </div>
+                <div>
+                  <label for="last-name">Last name</label>
+                  <input id="last-name" name="lastName" type="text" autocomplete="family-name" placeholder="Moyo" required />
+                </div>
+              </div>
 
-            <label for="contact">Email or phone number</label>
-            <input id="contact" name="contact" type="text" autocomplete="email" placeholder="farai@email.com or +263..." required />
+              <label for="username">Username</label>
+              <input id="username" name="username" type="text" autocomplete="username" placeholder="farai_moyo" required />
 
-            <label for="dob">Date of birth</label>
-            <input id="dob" name="dob" type="date" required />
+              <label for="contact">Email address</label>
+              <input id="contact" name="contact" type="email" autocomplete="email" placeholder="farai@email.com" required />
 
-            <label for="sex">Sex</label>
-            <select id="sex" name="sex" required>
-              <option value="">Select sex</option>
-              <option value="female">Female</option>
-              <option value="male">Male</option>
-              <option value="prefer_not_to_say">Prefer not to say</option>
-            </select>
+              <label for="profile-photo-input">Profile picture</label>
+              <label class="profile-upload" for="profile-photo-input">
+                <span class="profile-upload-preview" aria-hidden="true"></span>
+                <strong>Upload profile picture</strong>
+                <small>JPG, PNG, or WebP</small>
+                <input id="profile-photo-input" name="profilePhoto" type="file" accept="image/png,image/jpeg,image/webp" />
+              </label>
 
-            <button class="primary-button" type="submit">Create account</button>
+              <label for="register-password">Password</label>
+              <div class="input-icon-wrap">
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="M17 9V7a5 5 0 0 0-10 0v2H5v11h14V9h-2ZM9 7a3 3 0 0 1 6 0v2H9V7Zm4 8.7V18h-2v-2.3a2 2 0 1 1 2 0Z" />
+                </svg>
+                <input id="register-password" name="password" type="password" autocomplete="new-password" placeholder="Create a password" minlength="6" required />
+                <button class="password-toggle" type="button" data-toggle-password="register-password" aria-label="Show password">
+                  <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5c5.2 0 8.7 4.4 9.8 6.1.3.5.3 1.1 0 1.6C20.7 14.4 17.2 19 12 19s-8.7-4.6-9.8-6.3a1.5 1.5 0 0 1 0-1.6C3.3 9.4 6.8 5 12 5Zm0 2C7.9 7 5 10.4 4 11.9 5 13.5 7.9 17 12 17s7-3.5 8-5.1C19 10.4 16.1 7 12 7Zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6Z" /></svg>
+                </button>
+              </div>
+
+              <label for="register-confirm-password">Confirm password</label>
+              <div class="input-icon-wrap">
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="M17 9V7a5 5 0 0 0-10 0v2H5v11h14V9h-2ZM9 7a3 3 0 0 1 6 0v2H9V7Zm4 8.7V18h-2v-2.3a2 2 0 1 1 2 0Z" />
+                </svg>
+                <input id="register-confirm-password" name="confirmPassword" type="password" autocomplete="new-password" placeholder="Repeat your password" minlength="6" required />
+                <button class="password-toggle" type="button" data-toggle-password="register-confirm-password" aria-label="Show password">
+                  <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5c5.2 0 8.7 4.4 9.8 6.1.3.5.3 1.1 0 1.6C20.7 14.4 17.2 19 12 19s-8.7-4.6-9.8-6.3a1.5 1.5 0 0 1 0-1.6C3.3 9.4 6.8 5 12 5Zm0 2C7.9 7 5 10.4 4 11.9 5 13.5 7.9 17 12 17s7-3.5 8-5.1C19 10.4 16.1 7 12 7Zm0 2.2a2.8 2.8 0 1 1 0 5.6 2.8 2.8 0 0 1 0-5.6Z" /></svg>
+                </button>
+              </div>
+            </section>
+
+            <section class="register-step" data-register-step="1">
+              <div class="choice-heading">Tick all that you love</div>
+              <div class="interest-grid">
+                <label><input type="checkbox" name="interests" value="houses" /><span>⌂</span><strong>Houses</strong></label>
+                <label><input type="checkbox" name="interests" value="stands" /><span>▱</span><strong>Stands</strong></label>
+                <label><input type="checkbox" name="interests" value="resorts" /><span>♣</span><strong>Resorts</strong></label>
+                <label><input type="checkbox" name="interests" value="churches" /><span>✚</span><strong>Churches</strong></label>
+                <label><input type="checkbox" name="interests" value="schools" /><span>▰</span><strong>Schools</strong></label>
+                <label><input type="checkbox" name="interests" value="trips" /><span>✈</span><strong>Trips</strong></label>
+              </div>
+            </section>
+
+            <section class="register-step" data-register-step="2">
+              <div class="choice-heading">Are you an agent?</div>
+              <div class="agent-choice-grid">
+                <label><input type="radio" name="agentType" value="not_agent" checked /><span class="agent-choice-icon explorer-icon" aria-hidden="true"></span><strong>Just exploring</strong><small>I want places, trips, and property updates.</small></label>
+                <label><input type="radio" name="agentType" value="agent" /><span class="agent-choice-icon agent-icon" aria-hidden="true"></span><strong>I am an agent</strong><small>I list property, places, or trips.</small></label>
+              </div>
+            </section>
+
+            <section class="register-step" data-register-step="3">
+              <label for="dob">Date of birth</label>
+              <input id="dob" name="dob" type="date" required />
+
+              <div class="choice-heading">Gender</div>
+              <div class="gender-grid">
+                <label><input type="radio" name="sex" value="female" required /><span>♀</span><strong>Female</strong></label>
+                <label><input type="radio" name="sex" value="male" /><span>♂</span><strong>Male</strong></label>
+                <label><input type="radio" name="sex" value="prefer_not_to_say" /><span>•</span><strong>Prefer not</strong></label>
+              </div>
+            </section>
+
+            <div class="register-nav">
+              <button class="secondary-button" type="button" data-register-back hidden>Back</button>
+              <button class="primary-button" type="button" data-register-next>Next</button>
+              <button class="primary-button" type="submit" data-register-submit hidden>Create account</button>
+            </div>
             <div class="switch-row">
               Already have an account? <button type="button" data-show-form="login">Sign in</button>
             </div>
@@ -156,13 +277,22 @@
           <span class="logo-mark" aria-hidden="true">
             <span class="logo-letter">F</span>
           </span>
+          <span>
+            <strong>FaraiConnect</strong>
+            <small>Connecting Zimbabwe <b aria-hidden="true">ZW</b></small>
+          </span>
         </div>
+        <button class="location-chip" type="button" aria-label="Current location Harare, Zimbabwe">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.7A2.7 2.7 0 1 1 12 6.3a2.7 2.7 0 0 1 0 5.4Z" /></svg>
+          Harare, Zimbabwe
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m7 10 5 5 5-5H7Z" /></svg>
+        </button>
         <div class="home-title-row">
           <button class="profile-chip" type="button" aria-label="Open profile">
             <span class="profile-avatar" aria-hidden="true"></span>
             <span>
-              <strong>Simbarashe Chaputsira</strong>
-              <small>@farai_moyo</small>
+              <strong id="profile-display-name">Guest</strong>
+              <small id="profile-username">@guest</small>
             </span>
           </button>
         </div>
@@ -171,17 +301,42 @@
             <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 22a2.7 2.7 0 0 0 2.6-2H9.4A2.7 2.7 0 0 0 12 22Zm7-6V11a7 7 0 0 0-14 0v5l-2 2v1h18v-1l-2-2Z" /></svg>
             <span>0</span>
           </button>
-          <button type="button" aria-label="Saved places">
-            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 3h12v19l-6-3.4L6 22V3Zm2 2v13.6l4-2.2 4 2.2V5H8Z" /></svg>
-          </button>
-          <button type="button" aria-label="Menu">
-            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16v2H4V6Zm0 5h16v2H4v-2Zm0 5h16v2H4v-2Z" /></svg>
-          </button>
+          <div class="home-menu">
+            <button type="button" id="home-menu-button" aria-label="Menu" aria-expanded="false">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6h16v2H4V6Zm0 5h16v2H4v-2Zm0 5h16v2H4v-2Z" /></svg>
+            </button>
+            <div class="home-menu-panel" id="home-menu-panel" hidden>
+              <div class="home-menu-title">Account</div>
+              <button type="button" id="sign-out-button">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M10 4H5v16h5v2H3V2h7v2Zm7.6 4.4L22.2 13l-4.6 4.6-1.4-1.4 2.2-2.2H9v-2h9.4l-2.2-2.2 1.4-1.4Z" /></svg>
+                Sign out
+              </button>
+            </div>
+          </div>
         </div>
       </header>
 
       <section class="home-content" aria-label="Home overview">
         <section class="discovery-hero" aria-label="Explore places">
+          <div class="hero-slideshow" aria-hidden="true">
+            <span style="background-image: url('assets/hero-victoria-falls.jpg')"></span>
+            <span style="background-image: url('assets/hero-great-zimbabwe.webp')"></span>
+            <span style="background-image: url('assets/hero-hwange-lions.jpg')"></span>
+            <span style="background-image: url('assets/hero-hwange-elephants.jpg')"></span>
+            <span style="background-image: url('assets/hero-hwange-wildlife.jpg')"></span>
+            <span style="background-image: url('assets/victoria-falls-4.jpg')"></span>
+            <span style="background-image: url('assets/great-zimbabwe-2.webp')"></span>
+            <span style="background-image: url('https://commons.wikimedia.org/wiki/Special:FilePath/Zimbabwe_Gonarezhou_Landscape_Chilojo_Cliffs.jpg')"></span>
+            <span style="background-image: url('https://commons.wikimedia.org/wiki/Special:FilePath/Kariba_Dam_Wall.jpg')"></span>
+            <span style="background-image: url('https://commons.wikimedia.org/wiki/Special:FilePath/Chinhoyi_caves,_Zimbabwe.JPG')"></span>
+          </div>
+          <label class="home-search" aria-label="Search FaraiConnect">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M10.5 4a6.5 6.5 0 0 1 5.1 10.5l4 4-1.4 1.4-4-4A6.5 6.5 0 1 1 10.5 4Zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Z" /></svg>
+            <input type="search" placeholder="Search properties, places, schools, resorts..." />
+            <button type="button" aria-label="Open filters">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 7a3 3 0 1 1 5.8 1H21v2H10.8A3 3 0 0 1 5 7Zm2 0a1 1 0 1 0 2 0 1 1 0 0 0-2 0Zm6 10a3 3 0 0 1 5.8-1H21v2h-2.2a3 3 0 0 1-5.8-1ZM3 16h10.2a3 3 0 0 0 0 2H3v-2Z" /></svg>
+            </button>
+          </label>
           <div class="hero-copy">
             <p>Discover amazing</p>
             <h1 id="hero-category-title">Resorts</h1>
@@ -190,7 +345,7 @@
         </section>
 
         <div class="category-strip" aria-label="Browse categories">
-          <button class="category-pill" type="button" data-category="houses"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V21h-6v-6H9v6H3v-9.5Zm2 .9V19h2v-6h10v6h2v-6.6l-7-5.8-7 5.8Z" /></svg>Houses</button>
+          <button class="category-pill" type="button" data-category="houses"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V21h-6v-6H9v6H3v-9.5Zm2 .9V19h2v-6h10v6h2v-6.6l-7-5.8-7 5.8Z" /></svg>Properties</button>
           <button class="category-pill active" type="button" data-category="resorts"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3c2.8 2 4.2 4.4 4.2 7.2H13V21h-2V10.2H7.8C7.8 7.4 9.2 5 12 3Zm0 3.1c-.8.8-1.4 1.5-1.7 2.1h3.4c-.3-.6-.9-1.3-1.7-2.1ZM4 21c.3-3.1 2-5.4 5-6.8v2.2c-1.5 1-2.4 2.5-2.8 4.6H4Zm16 0h-2.2c-.4-2.1-1.3-3.6-2.8-4.6v-2.2c3 1.4 4.7 3.7 5 6.8Z" /></svg>Resorts</button>
           <button class="category-pill" type="button" data-category="stands"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 4h14v14H5V4Zm2 2v10h10V6H7Zm-4 14h18v2H3v-2Z" /></svg>Stands</button>
           <button class="category-pill" type="button" data-category="farms"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 21c-1.6-3.6-1.6-7.1 0-10.4C13.6 13.9 13.6 17.4 12 21Zm-5.7-3.2C4.9 14.6 5.5 12 8 10c1.2 2.9.7 5.5-1.7 7.8Zm11.4 0C15.3 15.5 14.8 12.9 16 10c2.5 2 3.1 4.6 1.7 7.8ZM12 3c2.5 1.5 3.8 3.7 3.8 6.5h-7.6C8.2 6.7 9.5 4.5 12 3Z" /></svg>Farms</button>
@@ -202,78 +357,144 @@
 
         <section class="featured-strip" aria-label="Featured resorts">
           <div class="section-heading">
-            <h2>Featured resorts</h2>
+            <span class="section-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V21h-6v-6H9v6H3v-9.5Z" /></svg></span>
+            <div>
+              <h2>Featured properties</h2>
+              <p>Verified listings from trusted agents</p>
+            </div>
+            <button type="button">View all</button>
           </div>
           <div class="featured-row">
-            <article style="background-image: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.68)), url('assets/victoria-falls-1.jpg')">
-              <span>4.8</span>
-              <strong>Victoria Falls stay</strong>
-              <small>Safari - Waterfalls - Luxury</small>
+            <article>
+              <div class="featured-photo" style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=90')">
+                <span>Verified Property</span>
+                <button type="button" aria-label="Save Modern 4 Bed House">
+                  <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 21.4 10.6 20C5.6 15.5 2.5 12.7 2.5 8.9A5.3 5.3 0 0 1 7.8 3.5c1.7 0 3.3.8 4.2 2.1.9-1.3 2.5-2.1 4.2-2.1a5.3 5.3 0 0 1 5.3 5.4c0 3.8-3.1 6.6-8.1 11.1L12 21.4Z" /></svg>
+                </button>
+                <small><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 2h2v3h6V2h2v3h3v17H4V5h3V2Zm11 8H6v10h12V10Z" /></svg>12</small>
+              </div>
+              <div class="featured-info">
+                <strong>Modern 4 Bed House</strong>
+                <p><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.7A2.7 2.7 0 1 1 12 6.3a2.7 2.7 0 0 1 0 5.4Z" /></svg>Borrowdale, Harare</p>
+                <em>US$ 250,000</em>
+                <div class="featured-agent">
+                  <span style="background-image:url('assets/profile-5.jpg')"></span>
+                  <b>John Moyo</b>
+                  <svg class="verified-dot" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2 14.5 5.2l4.1-.3.9 4 3 2.6-2.1 3.5.4 4.1-4 1-2.8 3-3.3-2.2-4.1.5-1.1-4-3.1-2.7 2.2-3.4-.5-4.1 4-1L12 2Zm-1 13.2 6.1-6.1-1.4-1.4L11 12.4 8.8 10.2l-1.4 1.4 3.6 3.6Z" /></svg>
+                  <button type="button" aria-label="Chat on WhatsApp"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2a9.8 9.8 0 0 0-8.5 14.7L2 22l5.4-1.4A9.9 9.9 0 1 0 12 2Zm0 2a7.9 7.9 0 0 1 6.8 11.9l-.3.5.8 2.9-3-.8-.5.3A7.9 7.9 0 0 1 5.2 8.1 7.9 7.9 0 0 1 12 4Zm-3.1 3.7c-.2 0-.5.1-.7.4-.3.3-.9.9-.9 2.1s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.8 2.2.9 2.6.7 3.1.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.5-.4l-1.7-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.6.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.3 0-.4.1-.5l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.8-1.9c-.2-.5-.4-.5-.6-.5h-.9Z" /></svg></button>
+                </div>
+              </div>
             </article>
-            <article style="background-image: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.68)), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=92')">
-              <span>4.6</span>
-              <strong>Kariba lakeside</strong>
-              <small>Relax - Boat cruise - Family</small>
+            <article>
+              <div class="featured-photo" style="background-image: url('assets/victoria-falls-5.jpg')">
+                <span class="resort-badge">Verified Resort</span>
+                <button type="button" aria-label="Save Nyanga Eco Resort"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 21.4 10.6 20C5.6 15.5 2.5 12.7 2.5 8.9A5.3 5.3 0 0 1 7.8 3.5c1.7 0 3.3.8 4.2 2.1.9-1.3 2.5-2.1 4.2-2.1a5.3 5.3 0 0 1 5.3 5.4c0 3.8-3.1 6.6-8.1 11.1L12 21.4Z" /></svg></button>
+                <small><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 2h2v3h6V2h2v3h3v17H4V5h3V2Zm11 8H6v10h12V10Z" /></svg>16</small>
+              </div>
+              <div class="featured-info">
+                <strong>Nyanga Eco Resort</strong>
+                <p><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.7A2.7 2.7 0 1 1 12 6.3a2.7 2.7 0 0 1 0 5.4Z" /></svg>Nyanga, Manicaland</p>
+                <em>From US$ 120 / night</em>
+                <div class="featured-agent">
+                  <span style="background-image:url('assets/profile-2.jpg')"></span>
+                  <b>128 visited</b>
+                  <button type="button" aria-label="View visitors"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8.8 11.8a3.9 3.9 0 1 0 0-7.8 3.9 3.9 0 0 0 0 7.8Zm6.7.2a3.3 3.3 0 1 0 0-6.6 3.3 3.3 0 0 0 0 6.6ZM2.5 20c.6-3.5 3.1-5.8 6.3-5.8s5.7 2.3 6.3 5.8H2.5Zm11.3 0c-.2-1.5-.8-2.9-1.8-4 1-.7 2.2-1.1 3.5-1.1 3 0 5.3 2 6 5.1h-7.7Z" /></svg></button>
+                </div>
+              </div>
             </article>
-            <article style="background-image: linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.68)), url('assets/great-zimbabwe-4.jpg')">
-              <span>4.7</span>
-              <strong>Great Zimbabwe</strong>
-              <small>Heritage - Walks - Culture</small>
+            <article>
+              <div class="featured-photo" style="background-image: url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=90')">
+                <span>Verified</span>
+                <button type="button" aria-label="Save Residential Stand"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 21.4 10.6 20C5.6 15.5 2.5 12.7 2.5 8.9A5.3 5.3 0 0 1 7.8 3.5c1.7 0 3.3.8 4.2 2.1.9-1.3 2.5-2.1 4.2-2.1a5.3 5.3 0 0 1 5.3 5.4c0 3.8-3.1 6.6-8.1 11.1L12 21.4Z" /></svg></button>
+                <small><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 2h2v3h6V2h2v3h3v17H4V5h3V2Zm11 8H6v10h12V10Z" /></svg>7</small>
+              </div>
+              <div class="featured-info">
+                <strong>Residential Stand</strong>
+                <p><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.7A2.7 2.7 0 1 1 12 6.3a2.7 2.7 0 0 1 0 5.4Z" /></svg>Ruwa, Mashonaland</p>
+                <em>US$ 15,000</em>
+                <div class="featured-agent">
+                  <span style="background-image:url('assets/profile-1.jpg')"></span>
+                  <b>Tendai Muchemo</b>
+                  <svg class="verified-dot" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2 14.5 5.2l4.1-.3.9 4 3 2.6-2.1 3.5.4 4.1-4 1-2.8 3-3.3-2.2-4.1.5-1.1-4-3.1-2.7 2.2-3.4-.5-4.1 4-1L12 2Zm-1 13.2 6.1-6.1-1.4-1.4L11 12.4 8.8 10.2l-1.4 1.4 3.6 3.6Z" /></svg>
+                  <button type="button" aria-label="Chat on WhatsApp"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2a9.8 9.8 0 0 0-8.5 14.7L2 22l5.4-1.4A9.9 9.9 0 1 0 12 2Zm0 2a7.9 7.9 0 0 1 6.8 11.9l-.3.5.8 2.9-3-.8-.5.3A7.9 7.9 0 0 1 5.2 8.1 7.9 7.9 0 0 1 12 4Zm-3.1 3.7c-.2 0-.5.1-.7.4-.3.3-.9.9-.9 2.1s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.8 2.2.9 2.6.7 3.1.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.5-.4l-1.7-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.6.1a6.5 6.5 0 0 1-3.2-2.8c-.1-.3 0-.4.1-.5l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.8-1.9c-.2-.5-.4-.5-.6-.5h-.9Z" /></svg></button>
+                </div>
+              </div>
             </article>
           </div>
         </section>
 
-        <div class="subfilter-strip" aria-label="Category filters"></div>
-
-        <div class="quick-grid" aria-label="Quick views">
-          <button class="quick-card" type="button" data-quick-card="organised">
-            <span>
-              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 2h2v3h6V2h2v3h3v17H4V5h3V2Zm11 8H6v10h12V10Zm-9.5 3.5h7v2h-7v-2Zm0 3h5v2h-5v-2Z" /></svg>
-              <b>12</b>
-            </span>
-            <strong>Organised trips</strong>
-            <small>Trips you've created</small>
-          </button>
-          <button class="quick-card" type="button" data-quick-card="planned">
-            <span>
-              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 2h2v3h6V2h2v3h3v17H4V5h3V2Zm11 8H6v10h12V10Zm-8 2 2 2 4-4 1.4 1.4-5.4 5.4-3.4-3.4L10 12Z" /></svg>
-              <b>4</b>
-            </span>
-            <strong>Planned visits</strong>
-            <small>Upcoming adventures</small>
-          </button>
-          <button class="quick-card" type="button" data-quick-card="notifications">
-            <span>
-              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 22a2.7 2.7 0 0 0 2.6-2H9.4A2.7 2.7 0 0 0 12 22Zm7-6V11a7 7 0 0 0-14 0v5l-2 2v1h18v-1l-2-2Z" /></svg>
-              <b>9</b>
-            </span>
-            <strong>Notifications</strong>
-            <small>New updates for you</small>
-          </button>
-          <button class="quick-card" type="button" data-quick-card="to-go">
-            <span>
-              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.7A2.7 2.7 0 1 1 12 6.3a2.7 2.7 0 0 1 0 5.4Z" /></svg>
-              <b>18</b>
-            </span>
-            <strong>To go places</strong>
-            <small>Your favourite spots</small>
-          </button>
-        </div>
-
-        <section class="invite-banner" aria-label="Invite friends">
-          <div>
-            <h2>Invite friends & explore together</h2>
-            <p>Share places, plan trips and create unforgettable memories.</p>
+        <section class="pulse-section" aria-label="Local activity">
+          <div class="section-heading compact-heading">
+            <span class="section-icon hot"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M13 2c2 3 1.1 5.2-.3 7 2.2-1 3.6-2.6 4-4.9 2.2 2.2 3.8 5.2 3.8 8.5A8.5 8.5 0 0 1 3.5 12C3.5 8.2 6 5.1 8.9 3.3c-.2 2.5.4 4.4 1.8 5.8C12.1 7.2 13.4 5 13 2Z" /></svg></span>
+            <h2>What's happening near you</h2>
+            <button type="button">See all activities</button>
           </div>
-          <button type="button">
-            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M10 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm0 2c-4 0-7 2.1-7 5v2h10.2a7 7 0 0 1 1.3-6.1A10.4 10.4 0 0 0 10 13Zm8-1h2v3h3v2h-3v3h-2v-3h-3v-2h3v-3Z" /></svg>
-            Invite Friends
-          </button>
-          <div class="invite-art" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
+          <div class="pulse-grid">
+            <article class="pulse-card planning">
+              <div class="pulse-top">
+                <span class="pulse-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8.8 11.8a3.9 3.9 0 1 0 0-7.8 3.9 3.9 0 0 0 0 7.8Zm6.7.2a3.3 3.3 0 1 0 0-6.6 3.3 3.3 0 0 0 0 6.6ZM2.5 20c.6-3.5 3.1-5.8 6.3-5.8s5.7 2.3 6.3 5.8H2.5Zm11.3 0c-.2-1.5-.8-2.9-1.8-4 1-.7 2.2-1.1 3.5-1.1 3 0 5.3 2 6 5.1h-7.7Z" /></svg></span>
+                <span class="face-stack"><i style="background-image:url('assets/profile-1.jpg')"></i><i style="background-image:url('assets/profile-2.jpg')"></i><i style="background-image:url('assets/profile-3.jpg')"></i><b>+5</b></span>
+              </div>
+              <strong>8 people</strong><span>are planning to visit <b>Chimanimani</b> this weekend</span>
+            </article>
+            <article class="pulse-card property">
+              <div class="pulse-top">
+                <span class="pulse-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V21h-6v-6H9v6H3v-9.5Z" /></svg></span>
+                <span class="face-stack"><i style="background-image:url('assets/profile-5.jpg')"></i><i style="background-image:url('assets/profile-3.jpg')"></i><i style="background-image:url('assets/profile-4.jpg')"></i><b>+12</b></span>
+              </div>
+              <strong>12 people</strong><span>saved a property in <b>Borrowdale</b></span>
+            </article>
+            <article class="pulse-card reviews">
+              <div class="pulse-top">
+                <span class="pulse-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12 2 2.9 6 6.6.9-4.8 4.7 1.2 6.5L12 17l-5.9 3.1 1.2-6.5-4.8-4.7 6.6-.9L12 2Z" /></svg></span>
+                <span class="face-stack"><i style="background-image:url('assets/profile-2.jpg')"></i><i style="background-image:url('assets/profile-5.jpg')"></i><i style="background-image:url('assets/profile-1.jpg')"></i><b>+5</b></span>
+              </div>
+              <strong>5 new reviews</strong><span>added to <b>Kuimba Shiri Resort</b></span>
+            </article>
+            <article class="pulse-card group">
+              <div class="pulse-top">
+                <span class="pulse-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8.8 11.8a3.9 3.9 0 1 0 0-7.8 3.9 3.9 0 0 0 0 7.8Zm6.7.2a3.3 3.3 0 1 0 0-6.6 3.3 3.3 0 0 0 0 6.6ZM2.5 20c.6-3.5 3.1-5.8 6.3-5.8s5.7 2.3 6.3 5.8H2.5Zm11.3 0c-.2-1.5-.8-2.9-1.8-4 1-.7 2.2-1.1 3.5-1.1 3 0 5.3 2 6 5.1h-7.7Z" /></svg></span>
+                <span class="place-thumb" style="background-image:url('assets/victoria-falls-3.jpg')"></span>
+              </div>
+              <strong>Mushikashika Outing Group</strong><span>has a new trip this Sunday</span>
+            </article>
           </div>
+        </section>
+
+        <section class="trip-preview-section" aria-label="Upcoming outings and trips">
+          <div class="section-heading compact-heading">
+            <span class="section-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 2h2v3h6V2h2v3h3v17H4V5h3V2Zm11 8H6v10h12V10Z" /></svg></span>
+            <h2>Upcoming outings & trips</h2>
+            <button type="button" data-open-organised>View all</button>
+          </div>
+          <div class="trip-preview-row">
+            <article><img src="assets/victoria-falls-4.jpg" alt="" /><div><strong>Nyanga Day Trip</strong><span>Sun, 25 May 2025</span></div><button type="button">Join</button></article>
+            <article><img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=500&q=85" alt="" /><div><strong>Chimanimani Hike</strong><span>Sat, 31 May 2025</span></div><button type="button">Join</button></article>
+            <article><img src="assets/victoria-falls-5.jpg" alt="" /><div><strong>Families Fun Day</strong><span>Sat, 24 May 2025</span></div><button type="button">Join</button></article>
+            <article><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=500&q=85" alt="" /><div><strong>Sunset Boat Cruise</strong><span>Sat, 7 Jun 2025</span></div><button type="button">Join</button></article>
+          </div>
+        </section>
+
+        <section class="people-section" aria-label="People trending in your network">
+          <div class="section-heading compact-heading">
+            <span class="section-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 17h4l3-5 4 3 5-8 1.7 1-6.7 10.7-3.5-2.6L9.2 20H4v-3Z" /></svg></span>
+            <h2>People trending in your network</h2>
+            <button type="button">See all</button>
+          </div>
+          <div class="people-row">
+            <article><span class="people-avatar online" style="background-image:url('assets/profile-1.jpg')"></span><div><strong>Tawanda</strong><small>Property Agent</small><button type="button">Follow</button></div></article>
+            <article><span class="people-avatar online" style="background-image:url('assets/profile-2.jpg')"></span><div><strong>Rudo</strong><small>Explorer</small><button type="button">Follow</button></div></article>
+            <article><span class="people-avatar offline" style="background-image:url('assets/profile-3.jpg')"></span><div><strong>Tinashe</strong><small>Resort Host</small><button type="button">Follow</button></div></article>
+            <article><span class="people-avatar offline" style="background-image:url('assets/profile-4.jpg')"></span><div><strong>Mai Chipo</strong><small>Travel Planner</small><button type="button">Follow</button></div></article>
+          </div>
+        </section>
+
+        <section class="heartbeat-bar" aria-label="Community heartbeat">
+          <strong><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8.8 11.8a3.9 3.9 0 1 0 0-7.8 3.9 3.9 0 0 0 0 7.8Zm6.7.2a3.3 3.3 0 1 0 0-6.6 3.3 3.3 0 0 0 0 6.6ZM2.5 20c.6-3.5 3.1-5.8 6.3-5.8s5.7 2.3 6.3 5.8H2.5Zm11.3 0c-.2-1.5-.8-2.9-1.8-4 1-.7 2.2-1.1 3.5-1.1 3 0 5.3 2 6 5.1h-7.7Z" /></svg>Community heartbeat</strong>
+          <span class="heartbeat-stat online"><i></i><b>1,245</b> People online</span>
+          <span class="heartbeat-stat reviews"><i></i><b>87</b> New reviews</span>
+          <button class="heartbeat-stat trips" type="button" data-open-to-go><i></i><b>32</b> Planning trips</button>
+          <span class="heartbeat-faces"><i style="background-image:url('assets/profile-1.jpg')"></i><i style="background-image:url('assets/profile-2.jpg')"></i><i style="background-image:url('assets/profile-3.jpg')"></i><i style="background-image:url('assets/profile-4.jpg')"></i><b>+28</b></span>
         </section>
 
         <section class="quick-insight-panel" aria-live="polite" hidden></section>
@@ -315,8 +536,11 @@
       </nav>
 
       <section class="organised-trip-overlay" id="organised-trip-overlay" aria-label="Organised trips" hidden></section>
+      <section class="to-go-overlay" id="to-go-overlay" aria-label="To go places" hidden></section>
     </main>
 
-    <script src="app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="app.js?v=20260621-softer-shorter-reels"></script>
   </body>
 </html>

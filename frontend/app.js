@@ -10,7 +10,29 @@ const listingFeed = document.querySelector(".listing-feed");
 const quickGrid = document.querySelector(".quick-grid");
 const quickInsightPanel = document.querySelector(".quick-insight-panel");
 const organisedTripOverlay = document.querySelector("#organised-trip-overlay");
+const toGoOverlay = document.querySelector("#to-go-overlay");
 const heroCategoryTitle = document.querySelector("#hero-category-title");
+const forgotPasswordLink = document.querySelector("#forgot-password-link");
+const profileDisplayName = document.querySelector("#profile-display-name");
+const profileUsername = document.querySelector("#profile-username");
+const homeMenuButton = document.querySelector("#home-menu-button");
+const homeMenuPanel = document.querySelector("#home-menu-panel");
+const signOutButton = document.querySelector("#sign-out-button");
+const supabaseSettings = window.FARAI_SUPABASE || {};
+const supabaseIsConfigured =
+  Boolean(window.supabase) &&
+  Boolean(supabaseSettings.url) &&
+  Boolean(supabaseSettings.anonKey) &&
+  !String(supabaseSettings.url).includes("PASTE_") &&
+  !String(supabaseSettings.anonKey).includes("PASTE_");
+const supabaseClient = supabaseIsConfigured
+  ? window.supabase.createClient(supabaseSettings.url, supabaseSettings.anonKey)
+  : null;
+let passwordRecoveryMode =
+  window.location.hash.includes("type=recovery") ||
+  window.location.search.includes("type=recovery");
+let activeRegisterStep = 0;
+let pendingProfilePhotoPreview = "";
 let activeHomeView = "home";
 let activeCategory = "resorts";
 let activeQuickCard = "";
@@ -880,7 +902,7 @@ const resortDemandTimeline = [
     place: "Mazowe Dam",
     count: 18,
     image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=600&q=80",
-    filters: ["All resorts", "Weekend getaway", "Private", "Family friendly", "Day trips", "Braai", "Canoeing", "Near me"],
+    filters: ["Weekend getaway", "Private", "Family friendly", "Day trips", "Braai", "Canoeing", "Near me"],
     places: [
       { title: "Mazowe Dam day resort", place: "Mazowe", count: 18, image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=600&q=80" },
       { title: "Lake Chivero picnic side", place: "Harare West", count: 13, image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80" },
@@ -893,7 +915,7 @@ const resortDemandTimeline = [
     place: "Harare",
     count: 15,
     image: "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=600&q=80",
-    filters: ["All resorts", "Safari", "Game drive", "Crowd pullers", "Family friendly", "Lion interaction", "Lion viewing"],
+    filters: ["Safari", "Game drive", "Crowd pullers", "Family friendly", "Lion interaction", "Lion viewing"],
     places: [
       { title: "Lion and Cheetah Park", place: "Harare", count: 15, image: "https://images.unsplash.com/photo-1549366021-9f761d450615?auto=format&fit=crop&w=600&q=80" },
       { title: "Imire Rhino and Wildlife", place: "Marondera", count: 12, image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=600&q=80" },
@@ -906,7 +928,7 @@ const resortDemandTimeline = [
     place: "Victoria Falls",
     count: 14,
     image: victoriaFallsPhotos[0],
-    filters: ["All resorts", "Weekend getaway", "Restaurant", "Crowd pullers", "Stay provided", "Guided tours", "Waterfalls", "Boat cruise"],
+    filters: ["Weekend getaway", "Restaurant", "Crowd pullers", "Stay provided", "Guided tours", "Waterfalls", "Boat cruise"],
     places: [
       { title: "Victoria Falls boutique stay", place: "Victoria Falls", count: 14, image: victoriaFallsPhotos[0] },
       { title: "Zambezi river cruise", place: "Victoria Falls", count: 12, image: victoriaFallsPhotos[1] },
@@ -919,7 +941,7 @@ const resortDemandTimeline = [
     place: "Kariba",
     count: 11,
     image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80",
-    filters: ["All resorts", "Weekend getaway", "Private", "Family friendly", "Stay provided", "Boat cruise", "Braai", "Canoeing"],
+    filters: ["Weekend getaway", "Private", "Family friendly", "Stay provided", "Boat cruise", "Braai", "Canoeing"],
     places: [
       { title: "Kariba lakeside family resort", place: "Kariba", count: 11, image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80" },
       { title: "Binga hot springs stop", place: "Binga", count: 8, image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80" },
@@ -932,7 +954,7 @@ const resortDemandTimeline = [
     place: "Masvingo",
     count: 8,
     image: greatZimbabwePhotos[0],
-    filters: ["All resorts", "Heritage walks", "Guided tours", "Weekend getaway", "Crowd pullers", "Day trips"],
+    filters: ["Heritage walks", "Guided tours", "Weekend getaway", "Crowd pullers", "Day trips"],
     places: [
       { title: "Great Zimbabwe heritage resort", place: "Masvingo", count: 8, image: greatZimbabwePhotos[0] },
       { title: "Kyle dam heritage lodge", place: "Masvingo", count: 6, image: greatZimbabwePhotos[3] },
@@ -1082,7 +1104,7 @@ const categoryFilters = {
 const resortFilterGroups = [
   {
     label: "Type of resort",
-    filters: ["All resorts", "Weekend getaway", "Private", "Safari", "Game drive", "Restaurant", "Crowd pullers", "Family friendly", "Day trips", "Stay provided", "Near me"],
+    filters: ["Weekend getaway", "Private", "Safari", "Game drive", "Restaurant", "Crowd pullers", "Family friendly", "Day trips", "Stay provided", "Near me"],
   },
   {
     label: "Activities offered",
@@ -1143,7 +1165,6 @@ const resortFilterGroups = [
 const filterIcons = {
   "Type of resort": "✣",
   "Activities offered": "✤",
-  "All resorts": "✓",
   "Weekend getaway": "◌",
   Private: "◇",
   Safari: "♘",
@@ -1214,6 +1235,7 @@ function showPanel(panelName) {
 }
 
 function renderSubfilters(category) {
+  if (!subfilterStrip) return;
   if (category === "resorts") {
     subfilterStrip.innerHTML = resortFilterGroups
       .map(
@@ -1223,7 +1245,7 @@ function renderSubfilters(category) {
               <strong><span>${filterIcons[group.label] || ""}</span>${group.label}</strong>
             </div>
             <div class="subfilter-row">
-              ${group.filters.map((filter, filterIndex) => `<button class="subfilter-pill${groupIndex === 1 ? " activity-filter" : ""}${groupIndex === 0 && filterIndex === 0 ? " active" : ""}" type="button" data-resort-filter><span>${filterIcons[filter] || ""}</span>${filter}</button>`).join("")}
+              ${group.filters.map((filter) => `<button class="subfilter-pill${groupIndex === 1 ? " activity-filter" : ""}" type="button" data-resort-filter><span>${filterIcons[filter] || ""}</span>${filter}</button>`).join("")}
             </div>
           </div>`
       )
@@ -1243,7 +1265,7 @@ function renderSubfilters(category) {
 function updateHeroCategory(category) {
   if (!heroCategoryTitle) return;
   const label = {
-    houses: "Houses",
+    houses: "Properties",
     resorts: "Resorts",
     stands: "Stands",
     farms: "Farms",
@@ -1261,6 +1283,39 @@ function renderQuickInsightPanel() {
   const isResorts = activeCategory === "resorts";
   quickInsightPanel.hidden = false;
   quickInsightPanel.innerHTML = isResorts ? renderResortDemandPanel() : renderPropertyDemandPanel();
+}
+
+function renderToGoPlacesOverlay() {
+  const title = activeCategory === "resorts" ? "To go places" : "Most viewed properties";
+  const subtitle =
+    activeCategory === "resorts"
+      ? "See where people are planning to go and jump straight into a reel."
+      : "See the properties people are viewing most and jump straight into a reel.";
+  return `
+    <div class="organised-trip-backdrop to-go-backdrop">
+      <div class="organised-overlay-top">
+        <div>
+          <strong>${title}</strong>
+          <span>${subtitle}</span>
+        </div>
+        <button type="button" data-to-go-close aria-label="Close to go places">x</button>
+      </div>
+      <div class="to-go-panel">
+        ${activeCategory === "resorts" ? renderResortDemandPanel() : renderPropertyDemandPanel()}
+      </div>
+    </div>`;
+}
+
+function openToGoPlacesOverlay() {
+  if (!toGoOverlay) return;
+  activeQuickCard = "to-go";
+  activeDemandPlace = activeDemandPlace || resortDemandTimeline[0].title;
+  quickInsightPanel.hidden = true;
+  quickGrid?.querySelectorAll("[data-quick-card]").forEach((card) => {
+    card.classList.toggle("active", card.dataset.quickCard === "to-go");
+  });
+  toGoOverlay.innerHTML = renderToGoPlacesOverlay();
+  toGoOverlay.hidden = false;
 }
 
 function renderOrganisedTripsPanel() {
@@ -1421,9 +1476,9 @@ function renderOrganisedTripsOverlay() {
 }
 
 function getSelectedResortFilters() {
+  if (!subfilterStrip) return [];
   return Array.from(subfilterStrip.querySelectorAll(".subfilter-pill.active"))
-    .map((button) => button.textContent.trim())
-    .filter((filter) => filter !== "All resorts");
+    .map((button) => button.textContent.trim());
 }
 
 function getSelectedResortFilterGroups() {
@@ -1505,6 +1560,62 @@ function filterResortDemandItems() {
   };
 }
 
+function demandActivityTags(item, selected) {
+  const tags = [
+    ...(item.activities || []),
+    ...(selected.filters || []),
+  ]
+    .filter((tag) => !["Near me", "Crowd pullers", "Stay provided"].includes(tag))
+    .map((tag) => tag.replace(" / BBQ areas", "").replace("Boat cruise", "Boat cruises"));
+  return [...new Set(tags)].slice(0, 3);
+}
+
+function renderDemandPopover(action, itemTitle, tags = []) {
+  if (action === "activities") {
+    const visibleTags = tags.length ? tags : ["Weekend getaway", "Private outing", "Family friendly"];
+    return `
+      <div class="demand-popover-header">
+        <strong>Activities</strong>
+        <button type="button" data-demand-popover-close aria-label="Close activities">x</button>
+      </div>
+      <div class="demand-popover-list">
+        ${visibleTags.map((tag) => `<p>${iconActivity()}<span>${tag}</span></p>`).join("")}
+      </div>`;
+  }
+
+  if (action === "comments") {
+    return `
+      <div class="demand-popover-header">
+        <strong>Comments</strong>
+        <button type="button" data-demand-popover-close aria-label="Close comments">x</button>
+      </div>
+      <div class="demand-popover-list">
+        <p>${iconComment()}<span>Road looks good for a group trip.</span></p>
+        <p>${iconComment()}<span>Please confirm entry fees before going.</span></p>
+      </div>`;
+  }
+
+  if (action === "visitors") {
+    return `
+      <div class="demand-popover-header">
+        <strong>People interested</strong>
+        <button type="button" data-demand-popover-close aria-label="Close people">x</button>
+      </div>
+      <div class="demand-popover-list">
+        <p>${iconVisitors()}<span>Rumbi wants to visit ${itemTitle}.</span></p>
+        <p>${iconVisitors()}<span>Tapiwa is checking dates.</span></p>
+        <p>${iconVisitors()}<span>A weekend travel group is open.</span></p>
+      </div>`;
+  }
+
+  return `
+    <div class="demand-popover-header">
+      <strong>Update</strong>
+      <button type="button" data-demand-popover-close aria-label="Close update">x</button>
+    </div>
+    <div class="demand-popover-list"><p>${iconPlan()}<span>${action}</span></p></div>`;
+}
+
 function renderResortDemandPanel() {
   const { selectedFilters, items } = filterResortDemandItems();
   const sortedDemand = [...items].sort((a, b) => b.count - a.count);
@@ -1521,7 +1632,6 @@ function renderResortDemandPanel() {
       </div>`;
   }
   const selectedPlaces = selected.places || [selected];
-  const maxPlaceCount = Math.max(...selectedPlaces.map((item) => item.count));
   return `
     <div class="quick-insight-head">
       <div>
@@ -1546,13 +1656,26 @@ function renderResortDemandPanel() {
       ${selectedPlaces
         .map(
           (item) => `
-            <article class="demand-item" data-demand-target="${demandReelTargets[item.title] || selected.id || ""}" role="button" tabindex="0" aria-label="Open reel for ${item.title}">
-              <img src="${item.image}" alt="" />
-              <div>
-                <strong>${item.title}</strong>
-                <span>${item.count} people planning to visit${item.place ? ` - ${item.place}` : ""}</span>
+            <article class="demand-item demand-resort-card" data-demand-target="${demandReelTargets[item.title] || selected.id || ""}" role="button" tabindex="0" aria-label="Open reel for ${item.title}">
+              <div class="demand-resort-image" style="background-image: linear-gradient(180deg, rgba(4, 13, 9, 0.06), rgba(4, 13, 9, 0.74)), url('${item.image}')"></div>
+              <div class="demand-resort-body">
+                <div>
+                  <p>${selected.place || item.place || "Resort"}</p>
+                  <strong>${item.title}</strong>
+                  <span>${item.place || selected.place}</span>
+                </div>
+                <div class="demand-resort-tags">
+                  ${demandActivityTags(item, selected).map((tag) => `<em>${tag}</em>`).join("")}
+                </div>
               </div>
-              <div class="demand-meter" aria-label="${item.count} planning"><span style="width: ${(item.count / maxPlaceCount) * 100}%"></span></div>
+              <div class="demand-resort-actions">
+                <button type="button" data-demand-action="like" data-demand-title="${item.title}" aria-label="Like ${item.title}">${iconHeart()}<span>${Math.max(120, item.count * 24)}</span></button>
+                <button type="button" data-demand-action="comments" data-demand-title="${item.title}" aria-label="Show comments for ${item.title}">${iconComment()}<span>${Math.max(12, item.count * 3)}</span></button>
+                <button type="button" data-demand-action="visitors" data-demand-title="${item.title}" aria-label="Show visitors for ${item.title}">${iconVisitors()}<span>${Math.max(3, Math.round(item.count / 3))}</span></button>
+                <button type="button" data-demand-action="activities" data-demand-title="${item.title}" data-demand-tags="${demandActivityTags(item, selected).join("|")}" aria-label="Show activities for ${item.title}">${iconActivity()}<span>${demandActivityTags(item, selected).length}</span></button>
+                <button class="gold" type="button" data-demand-action="plan" aria-label="${item.count} people planning ${item.title}">${iconPlan()}<span>${item.count}</span></button>
+              </div>
+              <div class="demand-resort-popover" hidden></div>
             </article>`
         )
         .join("")}
@@ -1598,7 +1721,7 @@ function renderListings(view = "home") {
       <div class="empty-liked">
         ${activeCategory === "resorts" ? iconActivity() : iconHeart()}
         <strong>${activeCategory === "resorts" ? "No matching resorts yet" : "No liked items yet"}</strong>
-        <span>${activeCategory === "resorts" ? "Try removing one filter or choose All resorts." : "Tap the heart on any property to save it here."}</span>
+        <span>${activeCategory === "resorts" ? "Try removing one filter." : "Tap the heart on any property to save it here."}</span>
       </div>`;
     return;
   }
@@ -1614,15 +1737,24 @@ function renderListings(view = "home") {
                   ? `<div class="image-summary">
                       <p>${listing.type}</p>
                       <h2>${listing.title}</h2>
+                      ${
+                        listing.category === "resort"
+                          ? `<div class="resort-rating-row"><span aria-hidden="true">&#9733;</span> <strong>${(listing.resortRating || listing.agentRating || 4.6).toFixed(1)}</strong> <small>(${listing.comments} reviews)</small></div>`
+                          : ""
+                      }
                       <strong>${listing.price}</strong>
                     </div>
                     <div class="property-specs" aria-label="Property details">
                       ${renderListingSpecs(listing)}
                     </div>
                     <div class="image-actions" aria-label="Listing actions">
-                      <button class="like-button ${listing.liked ? "liked" : ""}" type="button" data-detail="likes" data-liked="${listing.liked}" aria-label="Like property">${iconHeart()}<span>${listing.likes}</span></button>
-                      <button type="button" data-detail="comments" aria-label="Open comments">${iconComment()}<span>${listing.comments}</span></button>
-                      ${listing.category === "resort" ? renderResortSocialActions(listing) : ""}
+                      <button class="like-button ${listing.liked ? "liked" : ""}" type="button" data-detail="likes" data-liked="${listing.liked}" aria-label="Like property" data-action-label="${listing.category === "resort" ? "Save" : ""}">${iconHeart()}<span>${listing.likes}</span></button>
+                      ${
+                        listing.category === "resort"
+                          ? `${renderResortSocialActions(listing)}
+                      <button class="resort-social-action review-action" type="button" data-detail="comments" aria-label="Open reviews" data-action-label="Reviews">${iconComment()}<span>${listing.comments}</span></button>`
+                          : `<button type="button" data-detail="comments" aria-label="Open comments">${iconComment()}<span>${listing.comments}</span></button>`
+                      }
                       ${
                         listing.category !== "resort"
                           ? `<button class="verify-chip icon-only ${listing.propertyVerified ? "verified" : "unverified"}" type="button" data-detail="property" aria-label="${listing.propertyVerified ? "Verified property" : "Unverified property"}">${iconVerifiedProperty()}</button>
@@ -1639,7 +1771,7 @@ function renderListings(view = "home") {
         .join("");
 
       return `
-        <article class="property-card" data-listing-id="${listing.id}">
+        <article class="property-card ${listing.category === "resort" ? "resort-reel-card" : ""}" data-listing-id="${listing.id}">
           <div class="property-gallery" aria-label="Property photos">${photos}</div>
           <div class="gallery-controls" aria-label="Photo controls">
             <button type="button" data-gallery-control="previous" aria-label="Previous photo">${iconChevronLeft()}</button>
@@ -1653,6 +1785,7 @@ function renderListings(view = "home") {
               )
               .join("")}
           </div>
+          ${listing.category === "resort" ? renderResortThumbStrip(listing) : ""}
           <div class="agent-menu" hidden>
             <button class="agent-menu-close" type="button" data-agent-close aria-label="Close agent menu">x</button>
             <button class="agent-profile-open" type="button" data-agent-action="profile" aria-label="Open full profile for ${listing.poster}">
@@ -1762,9 +1895,24 @@ function renderListingSpecs(listing) {
 
 function renderResortSocialActions(listing) {
   return `
-    <button class="resort-social-action" type="button" data-detail="visitors" aria-label="View people who visited">${iconVisitors()}<span>${listing.visitors.length}</span></button>
-    <button class="resort-social-action" type="button" data-detail="activities" aria-label="View resort activities">${iconActivity()}<span>${listing.activities.length}</span></button>
-    <button class="resort-social-action ${listing.userPlanned ? "planned" : ""}" type="button" data-detail="plan" aria-label="Plan to visit this resort">${iconPlan()}<span>${listing.plannedCount}</span></button>`;
+    <button class="resort-social-action" type="button" data-detail="visitors" aria-label="View people who visited" data-action-label="Going">${iconVisitors()}<span>${listing.visitors.length}</span></button>
+    <button class="resort-social-action ${listing.userPlanned ? "planned" : ""}" type="button" data-detail="plan" aria-label="Plan to visit this resort" data-action-label="Plan visit">${iconPlan()}<span>${listing.plannedCount}</span></button>
+    <button class="resort-social-action" type="button" data-detail="activities" aria-label="View resort activities" data-action-label="Activities">${iconActivity()}<span>${listing.activities.length}</span></button>`;
+}
+
+function renderResortThumbStrip(listing) {
+  return `
+    <div class="resort-thumb-strip" aria-label="Resort photo preview">
+      ${listing.images
+        .map(
+          (image, index) => `
+            <button class="${index === 0 ? "active" : ""}" type="button" data-photo-dot="${index}" aria-label="Show resort photo ${index + 1}">
+              <span style="background-image: url('${image}')"></span>
+              ${index === listing.images.length - 1 ? `<small>${index + 1}/${listing.images.length}</small>` : ""}
+            </button>`
+        )
+        .join("")}
+    </div>`;
 }
 
 function renderComments(comments, filter) {
@@ -2352,7 +2500,7 @@ function updatePhotoDots(card) {
   const dots = [...card.querySelectorAll("[data-photo-dot]")];
   if (!gallery || dots.length === 0) return;
   const activeIndex = Math.round(gallery.scrollLeft / gallery.clientWidth);
-  dots.forEach((dot, index) => dot.classList.toggle("active", index === activeIndex));
+  dots.forEach((dot) => dot.classList.toggle("active", Number(dot.dataset.photoDot) === activeIndex));
 }
 
 function setupGalleryIndicators() {
@@ -2364,6 +2512,33 @@ function setupGalleryIndicators() {
   });
 }
 
+function renderSignedInProfile(user) {
+  if (!user) return;
+  const metadata = user.user_metadata || {};
+  const emailPrefix = String(user.email || "guest").split("@")[0];
+  const displayName =
+    metadata.display_name ||
+    [metadata.first_name, metadata.last_name].filter(Boolean).join(" ") ||
+    emailPrefix;
+  const username = metadata.username || emailPrefix;
+
+  profileDisplayName.textContent = displayName;
+  profileUsername.textContent = username.startsWith("@") ? username : `@${username}`;
+  if (pendingProfilePhotoPreview) {
+    document.querySelector(".profile-avatar").style.backgroundImage = `linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1)), url("${pendingProfilePhotoPreview}")`;
+  }
+}
+
+function returnToLoginScreen(message = "") {
+  homeScreen.hidden = true;
+  authScreen.hidden = false;
+  document.title = "FaraiConnect | Login";
+  showPanel("login");
+  if (message) {
+    setFormMessage(document.querySelector("#login-message"), message);
+  }
+}
+
 function openAgentDrawer(menu, html) {
   const drawer = menu.querySelector(".agent-drawer");
   menu.classList.add("compact");
@@ -2371,7 +2546,8 @@ function openAgentDrawer(menu, html) {
   drawer.innerHTML = html;
 }
 
-function enterHomeScreen() {
+function enterHomeScreen(user = null) {
+  renderSignedInProfile(user);
   authScreen.hidden = true;
   homeScreen.hidden = false;
   document.title = "FaraiConnect | Home";
@@ -2384,7 +2560,37 @@ function enterHomeScreen() {
 }
 
 formSwitchButtons.forEach((button) => {
-  button.addEventListener("click", () => showPanel(button.dataset.showForm));
+  button.addEventListener("click", () => {
+    showPanel(button.dataset.showForm);
+    if (button.dataset.showForm === "register") {
+      updateRegisterStep(0);
+      updatePhoneSecurityVisibility();
+    }
+  });
+});
+
+homeMenuButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+  const isOpen = !homeMenuPanel.hidden;
+  homeMenuPanel.hidden = isOpen;
+  homeMenuButton.setAttribute("aria-expanded", String(!isOpen));
+});
+
+document.addEventListener("click", (event) => {
+  if (event.target.closest(".home-menu")) return;
+  homeMenuPanel.hidden = true;
+  homeMenuButton.setAttribute("aria-expanded", "false");
+});
+
+signOutButton.addEventListener("click", async () => {
+  homeMenuPanel.hidden = true;
+  homeMenuButton.setAttribute("aria-expanded", "false");
+
+  if (supabaseClient) {
+    await supabaseClient.auth.signOut();
+  }
+
+  returnToLoginScreen("You have signed out.");
 });
 
 categoryButtons.forEach((button) => {
@@ -2415,20 +2621,30 @@ quickGrid?.addEventListener("click", (event) => {
   if (cardType !== "to-go") {
     activeQuickCard = "";
     quickInsightPanel.hidden = true;
+    if (toGoOverlay) toGoOverlay.hidden = true;
     quickGrid.querySelectorAll("[data-quick-card]").forEach((card) => card.classList.remove("active"));
     if (cardType === "likes") renderListings("likes");
     return;
   }
 
-  const isAlreadyOpen = activeQuickCard === cardType && !quickInsightPanel.hidden;
-  activeQuickCard = isAlreadyOpen ? "" : cardType;
-  quickGrid.querySelectorAll("[data-quick-card]").forEach((card) => card.classList.toggle("active", card === quickCard && activeQuickCard === cardType));
-  if (!activeQuickCard) {
+  openToGoPlacesOverlay();
+});
+
+document.querySelectorAll("[data-open-organised]").forEach((button) => {
+  button.addEventListener("click", () => {
+    activeQuickCard = "";
     quickInsightPanel.hidden = true;
-    return;
-  }
-  activeDemandPlace = activeDemandPlace || resortDemandTimeline[0].title;
-  renderQuickInsightPanel();
+    quickGrid?.querySelectorAll("[data-quick-card]").forEach((card) => card.classList.remove("active"));
+    openOrganisedTripsOverlay();
+  });
+});
+
+document.querySelectorAll("[data-open-to-go]").forEach((button) => {
+  button.addEventListener("click", () => {
+    activeQuickCard = "to-go";
+    quickInsightPanel.hidden = true;
+    openToGoPlacesOverlay();
+  });
 });
 
 navItems.forEach((button) => {
@@ -2440,28 +2656,11 @@ navItems.forEach((button) => {
   });
 });
 
-subfilterStrip.addEventListener("click", (event) => {
+subfilterStrip?.addEventListener("click", (event) => {
   const button = event.target.closest(".subfilter-pill");
   if (!button) return;
   if (activeCategory === "resorts") {
-    const isAllResorts = button.textContent.trim() === "All resorts";
-    const allResortsButton = Array.from(subfilterStrip.querySelectorAll(".subfilter-pill")).find(
-      (filterButton) => filterButton.textContent.trim() === "All resorts"
-    );
-    if (isAllResorts) {
-      subfilterStrip.querySelectorAll(".subfilter-pill").forEach((filterButton) => filterButton.classList.remove("active"));
-      button.classList.add("active");
-      activeDemandPlace = "";
-      renderListings("home");
-      renderQuickInsightPanel();
-      return;
-    }
     button.classList.toggle("active");
-    if (allResortsButton) allResortsButton.classList.remove("active");
-    const hasActiveFilter = Array.from(subfilterStrip.querySelectorAll(".subfilter-pill")).some(
-      (filterButton) => filterButton !== allResortsButton && filterButton.classList.contains("active")
-    );
-    if (!hasActiveFilter && allResortsButton) allResortsButton.classList.add("active");
     activeDemandPlace = "";
     renderListings("home");
     renderQuickInsightPanel();
@@ -2480,8 +2679,22 @@ document.addEventListener("click", (event) => {
 
   const quickClose = event.target.closest("[data-quick-close]");
   if (quickClose) {
+    if (quickClose.closest(".to-go-overlay")) {
+      activeQuickCard = "";
+      toGoOverlay.hidden = true;
+      quickGrid?.querySelectorAll("[data-quick-card]").forEach((card) => card.classList.remove("active"));
+      return;
+    }
     activeQuickCard = "";
     quickInsightPanel.hidden = true;
+    quickGrid?.querySelectorAll("[data-quick-card]").forEach((card) => card.classList.remove("active"));
+    return;
+  }
+
+  const toGoClose = event.target.closest("[data-to-go-close]");
+  if (toGoClose) {
+    activeQuickCard = "";
+    toGoOverlay.hidden = true;
     quickGrid?.querySelectorAll("[data-quick-card]").forEach((card) => card.classList.remove("active"));
     return;
   }
@@ -2557,10 +2770,65 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  const demandAction = event.target.closest("[data-demand-action]");
+  if (demandAction) {
+    event.preventDefault();
+    event.stopPropagation();
+    const card = demandAction.closest(".demand-resort-card");
+    const popover = card.querySelector(".demand-resort-popover");
+    const action = demandAction.dataset.demandAction;
+    const count = demandAction.querySelector("span");
+
+    card.querySelectorAll("[data-demand-action]").forEach((button) => {
+      if (button !== demandAction && action !== "like") button.classList.remove("active");
+    });
+
+    if (action === "like") {
+      const liked = demandAction.classList.toggle("active");
+      if (count) count.textContent = String(Number(count.textContent || 0) + (liked ? 1 : -1));
+      return;
+    }
+
+    if (action === "plan") {
+      const planned = demandAction.classList.toggle("active");
+      if (count) count.textContent = String(Number(count.textContent || 0) + (planned ? 1 : -1));
+      popover.hidden = false;
+      popover.innerHTML = renderDemandPopover(planned ? "Added to your planned places." : "Removed from your planned places.", demandAction.dataset.demandTitle || "this place");
+      return;
+    }
+
+    demandAction.classList.toggle("active");
+    const shouldOpen = demandAction.classList.contains("active");
+    popover.hidden = !shouldOpen;
+    if (!shouldOpen) return;
+
+    const tags = String(demandAction.dataset.demandTags || "").split("|").filter(Boolean);
+    popover.innerHTML = renderDemandPopover(action, demandAction.dataset.demandTitle || "this place", tags);
+    return;
+  }
+
+  const demandPopoverClose = event.target.closest("[data-demand-popover-close]");
+  if (demandPopoverClose) {
+    event.preventDefault();
+    event.stopPropagation();
+    const card = demandPopoverClose.closest(".demand-resort-card");
+    const popover = card.querySelector(".demand-resort-popover");
+    popover.hidden = true;
+    card.querySelectorAll("[data-demand-action]").forEach((button) => {
+      if (button.dataset.demandAction !== "like" && button.dataset.demandAction !== "plan") button.classList.remove("active");
+    });
+    return;
+  }
+
   const demandTarget = event.target.closest("[data-demand-target]");
   if (demandTarget) {
     if (demandTarget.closest(".organised-trip-overlay")) {
       organisedTripOverlay.hidden = true;
+    }
+    if (demandTarget.closest(".to-go-overlay")) {
+      toGoOverlay.hidden = true;
+      activeQuickCard = "";
+      quickGrid?.querySelectorAll("[data-quick-card]").forEach((card) => card.classList.remove("active"));
     }
     openListingReel(demandTarget.dataset.demandTarget);
     return;
@@ -2569,6 +2837,10 @@ document.addEventListener("click", (event) => {
   const demandPlace = event.target.closest("[data-demand-place]");
   if (demandPlace) {
     activeDemandPlace = demandPlace.dataset.demandPlace;
+    if (demandPlace.closest(".to-go-overlay")) {
+      toGoOverlay.innerHTML = renderToGoPlacesOverlay();
+      return;
+    }
     renderQuickInsightPanel();
     return;
   }
@@ -2588,6 +2860,7 @@ document.addEventListener("click", (event) => {
     const gallery = card.querySelector(".property-gallery");
     const index = Number(photoDot.dataset.photoDot);
     gallery.scrollTo({ left: index * gallery.clientWidth, behavior: "smooth" });
+    photoDot.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
     updatePhotoDots(card);
     return;
   }
@@ -3147,27 +3420,399 @@ document.addEventListener("input", (event) => {
   refreshedSearch.setSelectionRange(refreshedSearch.value.length, refreshedSearch.value.length);
 });
 
-googleLogin.addEventListener("click", () => {
-  enterHomeScreen();
+function setFormMessage(messageElement, text, isError = false) {
+  if (!messageElement) return;
+  messageElement.classList.toggle("error", isError);
+  messageElement.textContent = text;
+}
+
+function supabaseReadyMessage() {
+  return "Supabase is not connected yet. Add your project URL and anon key in frontend/supabase-config.js.";
+}
+
+function emailFromIdentifier(identifier) {
+  const value = String(identifier || "").trim().toLowerCase();
+  return value.includes("@") ? value : "";
+}
+
+function phoneFromIdentifier(identifier) {
+  const value = String(identifier || "").trim().replace(/\s+/g, "");
+  return value && !value.includes("@") ? value : "";
+}
+
+function updateRegisterStep(step) {
+  const nextStep = Math.max(0, Math.min(3, step));
+  activeRegisterStep = nextStep;
+  document.querySelectorAll("[data-register-step]").forEach((panel, index) => {
+    panel.classList.toggle("active", index === activeRegisterStep);
+  });
+  document.querySelectorAll(".register-progress span").forEach((dot, index) => {
+    dot.classList.toggle("active", index <= activeRegisterStep);
+  });
+  document.querySelector("[data-register-back]").hidden = activeRegisterStep === 0;
+  document.querySelector("[data-register-next]").hidden = activeRegisterStep === 3;
+  document.querySelector("[data-register-submit]").hidden = activeRegisterStep !== 3;
+  const copy = [
+    "Start your FaraiConnect profile.",
+    "Choose what you want FaraiConnect to bring closer.",
+    "Tell us how you will use the network.",
+    "Finish with a few profile and recovery details.",
+  ];
+  document.querySelector("#register-step-copy").textContent = copy[activeRegisterStep];
+}
+
+function updatePhoneSecurityVisibility() {
+  return;
+}
+
+function requireRegisterFields(ids, message) {
+  const missing = ids.find((id) => !String(document.querySelector(`#${id}`).value || "").trim());
+  if (!missing) return true;
+  document.querySelector(`#${missing}`).focus();
+  setFormMessage(document.querySelector("#register-message"), message, true);
+  return false;
+}
+
+function validateRegisterStep(step) {
+  if (step === 0) {
+    if (!requireRegisterFields(["first-name", "last-name", "username", "contact", "register-password", "register-confirm-password"], "Please complete first name, last name, username, contact, and password.")) {
+      return false;
+    }
+    if (!emailFromIdentifier(document.querySelector("#contact").value)) {
+      setFormMessage(document.querySelector("#register-message"), "For now, please register with email. Phone signup will come after Twilio is connected.", true);
+      return false;
+    }
+    if (document.querySelector("#register-password").value.length < 6) {
+      setFormMessage(document.querySelector("#register-message"), "Password must be at least 6 characters.", true);
+      return false;
+    }
+    if (document.querySelector("#register-password").value !== document.querySelector("#register-confirm-password").value) {
+      setFormMessage(document.querySelector("#register-message"), "Passwords do not match.", true);
+      return false;
+    }
+  }
+
+  if (step === 1 && document.querySelectorAll("input[name='interests']:checked").length === 0) {
+    setFormMessage(document.querySelector("#register-message"), "Choose at least one thing you love.", true);
+    return false;
+  }
+
+  if (step === 3) {
+    if (!requireRegisterFields(["dob"], "Please add your date of birth.")) return false;
+    if (!document.querySelector("input[name='sex']:checked")) {
+      setFormMessage(document.querySelector("#register-message"), "Please choose gender or prefer not to say.", true);
+      return false;
+    }
+  }
+
+  return true;
+}
+
+document.addEventListener("click", (event) => {
+  if (!event.target.closest("#forgot-password-link")) return;
+  event.preventDefault();
+  const loginEmail = emailFromIdentifier(document.querySelector("#login-identifier").value);
+  document.querySelector("#reset-email").value = loginEmail;
+  setFormMessage(document.querySelector("#forgot-message"), "");
+  showPanel("forgot-password");
 });
 
-document.querySelector("#login-form").addEventListener("submit", (event) => {
-  event.preventDefault();
-  enterHomeScreen();
+document.querySelector("[data-register-next]").addEventListener("click", () => {
+  setFormMessage(document.querySelector("#register-message"), "");
+  if (!validateRegisterStep(activeRegisterStep)) return;
+  updateRegisterStep(activeRegisterStep + 1);
 });
 
-document.querySelector("#register-form").addEventListener("submit", (event) => {
-  event.preventDefault();
-  const message = document.querySelector("#register-message");
-  const formData = new FormData(event.currentTarget);
-  const username = String(formData.get("username") || "").trim();
+document.querySelector("[data-register-back]").addEventListener("click", () => {
+  setFormMessage(document.querySelector("#register-message"), "");
+  updateRegisterStep(activeRegisterStep - 1);
+});
 
-  if (username.length < 3) {
-    message.classList.add("error");
-    message.textContent = "Username must be at least 3 characters.";
+document.querySelector("#profile-photo-input").addEventListener("change", (event) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    pendingProfilePhotoPreview = String(reader.result || "");
+    const preview = document.querySelector(".profile-upload-preview");
+    preview.classList.add("has-image");
+    preview.style.backgroundImage = `url("${pendingProfilePhotoPreview}")`;
+  });
+  reader.readAsDataURL(file);
+});
+
+document.addEventListener("click", (event) => {
+  const toggle = event.target.closest("[data-toggle-password]");
+  if (!toggle) return;
+  const input = document.querySelector(`#${toggle.dataset.togglePassword}`);
+  if (!input) return;
+  const shouldShow = input.type === "password";
+  input.type = shouldShow ? "text" : "password";
+  toggle.classList.toggle("active", shouldShow);
+  toggle.setAttribute("aria-label", shouldShow ? "Hide password" : "Show password");
+});
+
+googleLogin.addEventListener("click", async () => {
+  const message = document.querySelector("#login-message");
+
+  if (!supabaseClient) {
+    setFormMessage(message, supabaseReadyMessage(), true);
     return;
   }
 
-  message.classList.remove("error");
-  message.textContent = "Registration form is ready with contact details. Next step is saving this user profile.";
+  const { error } = await supabaseClient.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: window.location.href.split("#")[0],
+    },
+  });
+
+  if (error) {
+    setFormMessage(message, error.message, true);
+  }
 });
+
+document.querySelector("#login-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const message = document.querySelector("#login-message");
+  const submitButton = event.currentTarget.querySelector("button[type='submit']");
+  const formData = new FormData(event.currentTarget);
+  const identifier = String(formData.get("identifier") || "").trim();
+  const password = String(formData.get("password") || "");
+  const email = emailFromIdentifier(identifier);
+  const phone = phoneFromIdentifier(identifier);
+
+  if (!supabaseClient) {
+    setFormMessage(message, supabaseReadyMessage(), true);
+    return;
+  }
+
+  if (phone) {
+    setFormMessage(message, "Phone login is coming after Twilio is connected. For now, please login with email.", true);
+    return;
+  }
+
+  if (!email) {
+    setFormMessage(message, "Login with your email for now. Username login will come through profiles next.", true);
+    return;
+  }
+
+  submitButton.disabled = true;
+  submitButton.textContent = "Checking...";
+  setFormMessage(message, "");
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+  submitButton.disabled = false;
+  submitButton.textContent = "Login";
+
+  if (error) {
+    const loginError = String(error.message || "").toLowerCase();
+    if (loginError.includes("email") && loginError.includes("confirm")) {
+      setFormMessage(message, "Please open your email and click the verify button before logging in.", true);
+      return;
+    }
+    setFormMessage(message, "No account found or password is wrong. Please register first if you are new.", true);
+    return;
+  }
+
+  setFormMessage(message, "Welcome back.");
+  enterHomeScreen(data.user);
+});
+
+document.querySelector("#forgot-password-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const message = document.querySelector("#forgot-message");
+  const submitButton = event.currentTarget.querySelector("button[type='submit']");
+  const formData = new FormData(event.currentTarget);
+  const email = emailFromIdentifier(formData.get("email"));
+
+  if (!supabaseClient) {
+    setFormMessage(message, supabaseReadyMessage(), true);
+    return;
+  }
+
+  if (!email) {
+    setFormMessage(message, "Enter the email address you used to register.", true);
+    return;
+  }
+
+  submitButton.disabled = true;
+  submitButton.textContent = "Sending...";
+  setFormMessage(message, "");
+
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.href.split("#")[0],
+  });
+
+  submitButton.disabled = false;
+  submitButton.textContent = "Send reset email";
+
+  if (error) {
+    setFormMessage(message, error.message, true);
+    return;
+  }
+
+  setFormMessage(message, "Password reset email sent. Open your email and click the button to continue.");
+});
+
+document.querySelector("#new-password-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const message = document.querySelector("#new-password-message");
+  const submitButton = event.currentTarget.querySelector("button[type='submit']");
+  const formData = new FormData(event.currentTarget);
+  const password = String(formData.get("password") || "");
+  const confirmPassword = String(formData.get("confirmPassword") || "");
+
+  if (!supabaseClient) {
+    setFormMessage(message, supabaseReadyMessage(), true);
+    return;
+  }
+
+  if (password.length < 6) {
+    setFormMessage(message, "Password must be at least 6 characters.", true);
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    setFormMessage(message, "Passwords do not match.", true);
+    return;
+  }
+
+  submitButton.disabled = true;
+  submitButton.textContent = "Changing...";
+  setFormMessage(message, "");
+
+  const { error } = await supabaseClient.auth.updateUser({ password });
+
+  submitButton.disabled = false;
+  submitButton.textContent = "Change password";
+
+  if (error) {
+    setFormMessage(message, error.message, true);
+    return;
+  }
+
+  passwordRecoveryMode = false;
+  window.history.replaceState({}, document.title, window.location.pathname);
+  setFormMessage(document.querySelector("#login-message"), "Password changed. Login with your new password.");
+  showPanel("login");
+});
+
+document.querySelector("#register-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const message = document.querySelector("#register-message");
+  const submitButton = event.currentTarget.querySelector("button[type='submit']");
+  const formData = new FormData(event.currentTarget);
+  if (!validateRegisterStep(3)) return;
+  const firstName = String(formData.get("firstName") || "").trim();
+  const lastName = String(formData.get("lastName") || "").trim();
+  const username = String(formData.get("username") || "").trim();
+  const contact = String(formData.get("contact") || "").trim();
+  const dob = String(formData.get("dob") || "");
+  const sex = String(formData.get("sex") || "");
+  const password = String(formData.get("password") || "");
+  const confirmPassword = String(formData.get("confirmPassword") || "");
+  const email = emailFromIdentifier(contact);
+  const phone = phoneFromIdentifier(contact);
+
+  if (!supabaseClient) {
+    setFormMessage(message, supabaseReadyMessage(), true);
+    return;
+  }
+
+  if (username.length < 3) {
+    setFormMessage(message, "Username must be at least 3 characters.", true);
+    return;
+  }
+
+  if (phone) {
+    setFormMessage(message, "Phone signup is paused until Twilio is connected. For now, please register with email.", true);
+    return;
+  }
+
+  if (!email) {
+    setFormMessage(message, "Enter a valid email address.", true);
+    return;
+  }
+
+  if (password.length < 6) {
+    setFormMessage(message, "Password must be at least 6 characters.", true);
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    setFormMessage(message, "Passwords do not match.", true);
+    return;
+  }
+
+  submitButton.disabled = true;
+  submitButton.textContent = "Creating...";
+  setFormMessage(message, "");
+
+  const profileData = {
+    first_name: firstName,
+    last_name: lastName,
+    display_name: `${firstName} ${lastName}`.trim(),
+    username,
+    dob,
+    sex,
+    contact,
+    profile_photo_name: formData.get("profilePhoto")?.name || "",
+    interests: formData.getAll("interests"),
+    agent_type: formData.get("agentType") || "not_agent",
+  };
+
+  const signupPayload = {
+    email,
+    password,
+    options: {
+      emailRedirectTo: window.location.href.split("#")[0],
+      data: profileData,
+    },
+  };
+
+  const { data, error } = await supabaseClient.auth.signUp(signupPayload);
+
+  submitButton.disabled = false;
+  submitButton.textContent = "Create account";
+
+  if (error) {
+    setFormMessage(message, error.message, true);
+    return;
+  }
+
+  if (data.session) {
+    setFormMessage(message, "Account created. Welcome to FaraiConnect.");
+    enterHomeScreen(data.user);
+    return;
+  }
+
+  setFormMessage(document.querySelector("#login-message"), "Account created. Open your email and click the verify button, then login.");
+  showPanel("login");
+});
+
+if (supabaseClient) {
+  supabaseClient.auth.getSession().then(({ data }) => {
+    if (passwordRecoveryMode && data.session) {
+      showPanel("new-password");
+      return;
+    }
+
+    if (data.session) {
+      enterHomeScreen(data.session.user);
+    }
+  });
+
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === "PASSWORD_RECOVERY") {
+      passwordRecoveryMode = true;
+      showPanel("new-password");
+      return;
+    }
+
+    if (event === "SIGNED_IN" && session && !passwordRecoveryMode) {
+      enterHomeScreen(session.user);
+    }
+  });
+}
